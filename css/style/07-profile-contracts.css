@@ -1,0 +1,363 @@
+/* style/07-profile-contracts.css — Профиль и контракты (версия 2).
+   Порядок подключения важен (каскад): см. index.html. */
+/* ---------- Профиль ---------- */
+.pf2-top {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 16px;
+}
+.pf2-card {
+  background: linear-gradient(180deg, #1a202c, var(--panel));
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 18px;
+  min-width: 0;
+}
+.pf2-stats { grid-column: 1; grid-row: 1; }
+.pf2-user {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 10px;
+}
+.pf2-best { grid-column: 3; grid-row: 1 / span 2; display: flex; flex-direction: column; align-items: center; text-align: center; }
+
+.pf2-head { display: flex; align-items: center; gap: 12px; color: var(--orange-2); }
+.pf2-head b { display: block; color: #fff; font-size: 16px; font-weight: 800; text-transform: uppercase; }
+.pf2-head small { display: block; color: var(--muted); font-size: 13px; text-transform: uppercase; }
+.pf2-nums { display: flex; gap: 26px; margin: 16px 0 6px; }
+.pf2-num { display: flex; align-items: center; gap: 8px; color: var(--orange-2); }
+.pf2-num b { color: #fff; font-size: 20px; font-weight: 800; }
+.pf2-lbl { color: var(--muted); font-size: 12px; text-transform: uppercase; margin-top: 12px; }
+.pf2-sold { display: flex; align-items: baseline; gap: 10px; margin-top: 4px; }
+.pf2-sold b { color: var(--orange-2); font-size: 22px; font-weight: 800; }
+.pf2-sold span { color: var(--muted); font-size: 14px; }
+
+.pf2-avatar {
+  width: 124px;
+  height: 124px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #3a2a24, #171c25);
+  border: 3px solid var(--orange);
+  box-shadow: 0 0 22px rgba(238,111,60,.35);
+  font-size: 46px;
+  font-weight: 800;
+  color: #fff;
+}
+.pf2-name { color: #fff; font-size: 17px; font-weight: 700; }
+.pf2-points { color: var(--orange-2); font-size: 15px; font-weight: 700; }
+.pf2-bal { display: flex; align-items: center; gap: 10px; color: var(--orange-2); }
+.pf2-bal b { color: #fff; font-size: 20px; font-weight: 800; }
+.pf2-topup { height: 36px; }
+
+.pf2-title { color: #fff; font-size: 15px; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; }
+.pf2-best-img img { width: 150px; height: 90px; object-fit: contain; filter: drop-shadow(0 8px 14px rgba(0,0,0,.5)); }
+.pf2-best-name { font-size: 14px; font-weight: 700; margin-top: 4px; }
+.pf2-best-price { color: var(--orange-2); font-weight: 800; font-size: 16px; margin-top: 4px; }
+
+.pf2-items-title { margin: 30px 0 14px; }
+.pf2-filters {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.pf2-filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: 0;
+  padding: 4px 0;
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+.pf2-filter i {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--orange);
+  border-radius: 3px;
+  display: inline-block;
+}
+.pf2-filter.active i { background: var(--orange); box-shadow: inset 0 0 0 3px #171c25; }
+.pf2-filter:hover { color: #fff; }
+.pf2-sell { margin-left: auto; height: 38px; }
+
+.pf2-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  align-content: start;
+}
+.pf2-grid .empty { padding: 40px 0; }
+.pf2-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 182px;
+  padding: 26px 8px 0;
+  background: linear-gradient(180deg, #1c2332, #141922);
+  border: 1px solid #252d40;
+  border-bottom: 3px solid var(--rc, #2f374e);
+  border-radius: 8px;
+  min-width: 0;
+}
+.pf2-item-price {
+  position: absolute;
+  top: 8px;
+  left: 9px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--orange-2);
+}
+.pf2-item-img { width: 100%; height: 84px; display: grid; place-items: center; }
+.pf2-item-img img {
+  max-width: 100%;
+  max-height: 84px;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 10px rgba(0,0,0,.5));
+}
+.pf2-item-name { width: 100%; text-align: center; line-height: 1.2; margin-top: 4px; min-width: 0; }
+.pf2-item-name span {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pf2-item-name b {
+  display: block;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pf2-item-acts {
+  margin-top: auto;
+  width: calc(100% + 16px);
+  margin-left: -8px;
+  display: flex;
+  justify-content: space-around;
+  border-top: 1px solid #252d40;
+  padding: 6px 0;
+}
+.pf2-item-acts button {
+  background: none;
+  border: 0;
+  padding: 4px 12px;
+  border-radius: 4px;
+  color: var(--orange-2);
+  cursor: pointer;
+}
+.pf2-item-acts button:hover { background: rgba(238,111,60,.14); color: #fff; }
+
+.pf2-settings { margin-top: 22px; }
+
+/* ---------- Контракты ---------- */
+.cx-slots {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 10px;
+  margin-bottom: 22px;
+}
+.cx-slot {
+  position: relative;
+  height: 112px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0f131c;
+  border: 1px solid #1f2639;
+  border-radius: 6px;
+  overflow: hidden;
+  min-width: 0;
+}
+.cx-slot.filled { border-bottom: 3px solid var(--rc, #2f374e); cursor: pointer; }
+.cx-slot.filled:hover { border-color: var(--orange); }
+.cx-slot img { max-width: 86%; max-height: 74px; object-fit: contain; }
+.cx-slot img.ghost { max-height: 66px; opacity: .07; filter: grayscale(1); }
+.cx-slot-price {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--orange-2);
+  background: rgba(0,0,0,.4);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+.cx-bar {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 14px 20px;
+  margin-bottom: 20px;
+  background: linear-gradient(180deg, #1a202c, var(--panel));
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.cx-balance { display: flex; align-items: center; gap: 10px; color: var(--text); font-size: 14px; white-space: nowrap; }
+.cx-balance b { color: #fff; font-size: 20px; font-weight: 800; }
+.cx-plus {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 0;
+  background: var(--orange);
+  color: #fff;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+}
+.cx-hint {
+  flex: 1;
+  text-align: center;
+  color: var(--orange-2);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .3px;
+}
+.cx-sum { color: var(--text); font-size: 14px; text-transform: uppercase; white-space: nowrap; }
+.cx-sum b { color: #fff; font-size: 16px; font-weight: 800; }
+
+.cx-cols {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 18px;
+  align-items: start;
+}
+.cx-cols > .panel { min-width: 0; }
+.cx-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+}
+.cx-grid .ut { min-height: 124px; padding-top: 24px; }
+.cx-pager {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  color: var(--text);
+}
+.cx-pg {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: #151a24;
+  color: var(--text);
+  font-size: 16px;
+  cursor: pointer;
+}
+.cx-pg:hover { border-color: var(--orange); color: #fff; }
+.cx-pages { text-align: center; color: var(--muted); font-size: 12px; margin-top: 6px; }
+.cx-sort { background: none; border: 1px solid var(--border, #2f374e); color: var(--muted); border-radius: 6px; padding: 3px 8px; font-size: 12px; cursor: pointer; }
+.cx-sort:hover { color: #fff; }
+
+.cx-side { padding: 16px; }
+.cx-use {
+  display: grid;
+  grid-template-columns: 96px 1fr auto;
+  align-items: center;
+  gap: 12px;
+}
+.cx-get {
+  text-align: center;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-top: 22px;
+}
+.cx-range {
+  text-align: center;
+  color: var(--text);
+  font-size: 15px;
+  text-transform: uppercase;
+  margin-top: 6px;
+}
+.cx-range b { color: var(--orange-2); }
+.cx-stage { display: flex; gap: 10px; margin: 16px 0; height: 260px; }
+.cx-rainbow {
+  width: 12px;
+  border-radius: 6px;
+  background: linear-gradient(180deg, #ff3b3b, #ff9739, #ffe03b, #4cff6b, #3ec8ff, #8847ff, #ff3bd4);
+}
+.cx-box {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #141924;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.cx-res {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px;
+  text-align: center;
+}
+.cx-res img { max-width: 90%; max-height: 150px; object-fit: contain; filter: drop-shadow(0 10px 16px rgba(0,0,0,.5)); }
+.cx-res-name span { display: block; color: var(--muted); font-size: 12px; }
+.cx-res-name b { display: block; color: #fff; font-size: 15px; }
+.cx-res-price { color: var(--orange-2); font-weight: 800; font-size: 18px; }
+.cx-rar {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+.cx-rar select {
+  height: 34px;
+  padding: 0 8px;
+  background: #0f131c;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--text);
+  font: inherit;
+}
+.cx-sign {
+  width: 100%;
+  height: 48px;
+  border-radius: 6px;
+  border: 2px solid var(--orange);
+  background: transparent;
+  color: var(--orange-2);
+  font-weight: 800;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+  cursor: pointer;
+}
+.cx-sign:hover:not(:disabled) { background: rgba(238,111,60,.15); color: #fff; }
+.cx-sign:disabled { opacity: .35; cursor: not-allowed; }
+
+/* ============================================================
+   v8: шапка, левая лента на всех страницах, сделки и профиль
+   ============================================================ */

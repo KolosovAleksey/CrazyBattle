@@ -1,0 +1,16 @@
+/* neon/06-battle.css — Battle в неон-стиле.
+   Порядок подключения важен (каскад): см. index.html. */
+body.neon .bt-box { background: rgba(10,8,18,.55); border: 1px solid rgba(31,227,255,.22); }
+body.neon .bt-slot-bot .bt-slot-price { color: #ff2e9a; text-shadow: 0 0 10px rgba(255,46,154,.6); }
+body.neon .bt-grid > .muted { grid-column: 1 / -1; max-width: none; color: #9aa0c8; }
+body.neon .bt-pick:hover { border-color: rgba(31,227,255,.6); box-shadow: 0 0 14px rgba(31,227,255,.25); }
+body.neon .bt-bar b { color: #fff; }
+body.neon .bt-go {
+  font-family: "Orbitron", sans-serif; font-size: 12px; letter-spacing: 1px;
+  background: linear-gradient(90deg, rgba(255,46,154,.85), rgba(155,92,255,.85));
+  border: 1px solid #ff2e9a; border-radius: 8px;
+  box-shadow: 0 0 18px rgba(255,46,154,.5);
+}
+body.neon .bt-go:not(:disabled):hover { box-shadow: 0 0 30px rgba(255,46,154,.85); transform: translateY(-1px); }
+body.neon .bt-go:disabled { background: rgba(60,40,80,.4); border-color: rgba(155,92,255,.3); box-shadow: none; }
+body.neon .bt-card-skin .bt-card-tag { color: #ff2e9a; }

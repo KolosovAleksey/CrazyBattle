@@ -1,0 +1,119 @@
+/* style/04-contracts-profile.css — Контракты, профиль.
+   Порядок подключения важен (каскад): см. index.html. */
+/* =========================================================
+   КОНТРАКТЫ
+   ========================================================= */
+.ct-slots { grid-template-columns: repeat(10, 1fr); }
+.ct-slots .slot { height: 112px; }
+.ct-slots .slot.filled img { width: 54px; height: 54px; margin-top: 12px; }
+.ct-slots .slot-price { bottom: 3px; }
+
+.ct-controls {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1.6fr 1fr;
+  gap: 12px;
+  margin-top: 16px;
+}
+.ct-box {
+  padding: 12px 14px;
+  background: #0f131b;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.ct-box > span { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+.ct-box b { color: #fff; font-size: 18px; }
+.ct-box select { width: 100%; height: 36px; }
+.ct-bal input[type="range"].range { margin: 6px 0 2px; }
+.ct-bal em { font-style: normal; color: #fff; text-transform: none; letter-spacing: 0; }
+
+.ct-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 16px;
+}
+.ct-footer .hint { margin: 0; }
+.ct-footer .btn-big { min-width: 320px; }
+
+/* =========================================================
+   ПРОФИЛЬ
+   ========================================================= */
+.profile-hero {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 26px;
+  align-items: center;
+  background:
+    radial-gradient(420px 200px at 0% 50%, rgba(238,111,60,.18), transparent 70%),
+    linear-gradient(180deg, #1a202c, var(--panel));
+}
+.avatar-big {
+  width: 100px;
+  height: 100px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--orange), #8847ff);
+  color: #fff;
+  font-size: 42px;
+  font-weight: 800;
+  box-shadow: 0 10px 30px -10px rgba(136, 71, 255, .8);
+}
+.pf-name-row { display: flex; gap: 8px; margin-bottom: 10px; }
+.pf-name-row input { width: 280px; font-size: 16px; font-weight: 700; }
+.pf-level b { color: #fff; font-size: 13px; }
+.pf-balance {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  padding-left: 26px;
+  border-left: 1px solid var(--line);
+}
+.pf-balance span { color: var(--muted); font-size: 12px; text-transform: uppercase; }
+.pf-balance b { color: #fff; font-size: 26px; margin-bottom: 4px; }
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  margin: 14px 0 18px;
+}
+.stat {
+  padding: 14px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.stat span { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; }
+.stat b { display: block; margin-top: 6px; color: #fff; font-size: 17px; }
+
+.profile-cols {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 18px;
+  margin-top: 0;
+}
+.field-label {
+  display: block;
+  margin: 14px 0 6px;
+  font-size: 12px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .4px;
+}
+.field-row-input { display: flex; gap: 8px; }
+.field-row-input input { flex: 1; }
+.profile-cols .hint { margin-top: 14px; }
+
+.best { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 0; text-align: center; }
+.best-img { width: 130px; height: 110px; }
+.best-img img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 8px 14px rgba(0,0,0,.5)); }
+.best-name { font-weight: 800; font-size: 14px; margin-top: 6px; }
+.best-price { color: #fff; font-weight: 800; font-size: 18px; }
+
+.inv-tools { display: flex; align-items: center; gap: 14px; text-transform: none; letter-spacing: 0; font-weight: 600; }

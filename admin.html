@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1200">
+  <meta name="robots" content="noindex, nofollow">
+  <title>CrazyBattle — админ-панель</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+  <!-- стили сайта: та же неон-тема, что и в игре -->
+  <link rel="stylesheet" href="css/style/01-layout.css?v=43">
+  <link rel="stylesheet" href="css/style/02-cards-controls.css?v=43">
+  <link rel="stylesheet" href="css/style/03-upgrade-results.css?v=43">
+  <link rel="stylesheet" href="css/style/04-contracts-profile.css?v=43">
+  <link rel="stylesheet" href="css/style/05-case-roulette.css?v=43">
+  <link rel="stylesheet" href="css/style/06-upgrade-wheel.css?v=43">
+  <link rel="stylesheet" href="css/style/07-profile-contracts.css?v=43">
+  <link rel="stylesheet" href="css/style/08-shell-profile-cs.css?v=43">
+  <link rel="stylesheet" href="css/style/09-battle-gold.css?v=43">
+  <link rel="stylesheet" href="css/neon/01-theme.css?v=26">
+  <link rel="stylesheet" href="css/neon/02-motion.css?v=26">
+  <link rel="stylesheet" href="css/neon/03-live-feed.css?v=26">
+  <link rel="stylesheet" href="css/neon/04-operation.css?v=26">
+  <link rel="stylesheet" href="css/neon/05-background.css?v=26">
+  <link rel="stylesheet" href="css/neon/06-battle.css?v=26">
+  <link rel="stylesheet" href="css/neon/07-achievements.css?v=26">
+  <link rel="stylesheet" href="css/neon/08-auth.css?v=1">
+  <!-- стили админ-панели: таблицы, вкладки карточки, поля (поверх стилей сайта) -->
+  <link rel="stylesheet" href="css/admin/admin.css?v=2">
+</head>
+<body class="neon">
+  <!-- живой фон, как в игре -->
+  <div class="fx-layers" aria-hidden="true">
+    <div class="fx-aurora"><i></i><i></i><i></i></div>
+    <div class="fx-sun"></div>
+    <div class="fx-pillar fx-pillar-l"></div>
+    <div class="fx-pillar fx-pillar-r"></div>
+    <div class="fx-floor"><div class="fx-floor-grid"></div></div>
+    <div class="fx-horizon"></div>
+    <div class="fx-streaks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="fx-beam fx-beam-a"></div>
+    <div class="fx-beam fx-beam-b"></div>
+    <div class="fx-ring"></div>
+    <div class="fx-scan"></div>
+    <div class="fx-spot"></div>
+    <div class="fx-vignette"></div>
+    <div class="fx-crt"></div>
+    <span class="fx-corner tl"></span><span class="fx-corner tr"></span>
+    <span class="fx-corner bl"></span><span class="fx-corner br"></span>
+  </div>
+  <canvas id="fx-bg" aria-hidden="true"></canvas>
+
+  <!-- вход: то же окно, что и на сайте; без роли admin доступа нет -->
+  <div id="adm-login" class="auth-gate hidden" role="dialog" aria-modal="true" aria-labelledby="adm-login-title">
+    <form id="adm-login-form" class="auth-card" autocomplete="on" novalidate>
+      <img class="auth-logo" src="img/misc/logo.png" alt="CrazyBattle">
+      <h2 id="adm-login-title">Админ-панель</h2>
+      <label class="auth-field">Ник
+        <input name="nick" type="text" maxlength="16" required autocomplete="username">
+      </label>
+      <label class="auth-field">Пароль
+        <input name="password" type="password" maxlength="72" required autocomplete="current-password">
+      </label>
+      <div id="adm-login-error" class="auth-error" aria-live="polite"></div>
+      <button id="adm-login-submit" class="btn auth-submit" type="submit">Войти</button>
+    </form>
+  </div>
+
+  <div id="adm-app" class="hidden">
+    <!-- шапка как на сайте -->
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="logo" href="#overview" aria-label="Обзор">
+          <img class="logo-img" src="img/misc/logo.png" alt="CrazyBattle">
+        </a>
+        <nav class="nav adm-nav">
+          <a class="nav-tab" data-tab="overview" href="#overview">Обзор</a>
+          <a class="nav-tab" data-tab="players" href="#players">Игроки</a>
+          <a class="nav-tab" data-tab="log" href="#log">Журнал</a>
+        </nav>
+        <div class="top-right">
+          <span class="adm-who">Админ · <b id="adm-who"></b></span>
+          <button id="adm-logout" class="btn-outline" type="button">Выйти</button>
+        </div>
+      </div>
+    </header>
+    <main class="adm-main">
+      <div id="adm-view"></div>
+    </main>
+  </div>
+
+  <div id="adm-modal" class="adm-modal hidden"><div class="adm-modal-box panel" id="adm-modal-box"></div></div>
+  <div id="adm-toasts"></div>
+
+  <!-- справочники игры (названия, цены, достижения, операция) -->
+  <script src="js/cases_cb.js?v=18"></script>
+  <script src="js/data.js?v=30"></script>
+  <script src="js/skins.js?v=17"></script>
+  <script src="js/shop_items.js?v=4"></script>
+  <script src="js/shop_cases.js?v=4"></script>
+  <script src="js/fx.js?v=2"></script>
+  <script src="js/achievements.js?v=5"></script>
+  <script src="js/operation.js?v=3"></script>
+  <!-- админ-панель -->
+  <script src="js/admin/core.js?v=2"></script>
+  <script src="js/admin/overview.js?v=2"></script>
+  <script src="js/admin/players.js?v=2"></script>
+  <script src="js/admin/editor.js?v=2"></script>
+  <script src="js/admin/log.js?v=2"></script>
+  <script src="js/admin/boot.js?v=2"></script>
+</body>
+</html>

@@ -1,0 +1,391 @@
+/* style/01-layout.css — Шапка, общая разметка, промо-баннер, живая лента.
+   Порядок подключения важен (каскад): см. index.html. */
+/* =========================================================
+   CRAZYBATTLE — стиль по мотивам case-battle
+   Палитра: фон #0f0f19 / #171c25, акцент оранжевый #ee6f3c → #ff9739,
+   бордеры #2f374e, текст #bfcae3. Только desktop (min-width 1080px).
+   ========================================================= */
+
+:root {
+  --bg: #0f1119;
+  --bg-2: #121621;
+  --panel: #171c25;
+  --panel-2: #1c2230;
+  --line: #2a3248;
+  --line-2: #3a4560;
+  --text: #bfcae3;
+  --text-strong: #ffffff;
+  --muted: #7d8495;
+  --orange: #ee6f3c;
+  --orange-2: #ff9739;
+  --green: #5fd16b;
+  --red: #eb4b4b;
+  --radius: 10px;
+}
+
+* { box-sizing: border-box; }
+
+html { height: 100%; }
+
+body {
+  min-height: 100%;
+  margin: 0;
+  min-width: 1080px;
+  background:
+    radial-gradient(1100px 420px at 50% -180px, #222b45 0%, transparent 70%),
+    var(--bg);
+  color: var(--text);
+  font-family: "Open Sans", "Segoe UI", Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 { margin: 0; color: var(--text-strong); }
+button, input, select { font-family: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+img { display: block; }
+.hidden { display: none !important; }
+.muted { color: var(--muted); }
+.small { font-size: 12px; }
+.empty { grid-column: 1 / -1; padding: 30px; text-align: center; color: var(--muted); }
+.hint { font-size: 12px; color: var(--muted); margin-top: 10px; }
+
+/* ---------- Монетка ---------- */
+.coin {
+  display: inline-grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ffe09a, #d3863c 70%);
+  color: #4a2a05;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1;
+  vertical-align: -2px;
+  flex-shrink: 0;
+}
+
+/* =========================================================
+   ШАПКА
+   ========================================================= */
+
+/* ---------- шапка и логотип ---------- */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  height: 64px;
+  background: rgba(8, 6, 16, .86);
+  border-bottom: 1px solid #2a1d4a;
+  box-shadow: 0 10px 40px rgba(255, 46, 154, .10), inset 0 -1px 0 rgba(31, 227, 255, .25);
+  backdrop-filter: blur(10px);
+}
+
+.topbar-inner {
+  max-width: 1200px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: #fff;
+}
+
+.logo-mark {
+  width: 32px;
+  height: 32px;
+  border-radius: 0;
+  transform: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%231fe3ff'/%3E%3Cstop offset='1' stop-color='%23ff2e9a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M16 1.5 29.5 9.3v13.4L16 30.5 2.5 22.7V9.3z' fill='none' stroke='url(%23g)' stroke-width='2'/%3E%3Cpath d='M18.6 6.5 9.6 17.6h6.2l-2.3 7.9 9.1-11.3h-6.2z' fill='url(%23g)'/%3E%3C/svg%3E") center / contain no-repeat;
+  box-shadow: none;
+  position: relative;
+  filter: drop-shadow(0 0 8px rgba(255, 46, 154, .55));
+}
+.logo-mark::after {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border-radius: 3px;
+  background: #171c25;
+  display: none;
+}
+
+.logo-text {
+  font-family: "Orbitron", "Arial Black", "Segoe UI Black", sans-serif;
+  font-size: 18px;
+  letter-spacing: .08em;
+  color: #fff;
+  font-weight: 900;
+  text-shadow: 0 0 14px rgba(255, 46, 154, .65);
+}
+.logo-text span { color: transparent; background: linear-gradient(90deg, #1fe3ff, #9b5cff 55%, #ff2e9a); -webkit-background-clip: text; background-clip: text; text-shadow: none; filter: drop-shadow(0 0 6px rgba(31, 227, 255, .55)); }
+
+.nav { display: flex; gap: 4px; height: 100%; }
+
+.nav-tab {
+  position: relative;
+  height: 100%;
+  padding: 0 18px;
+  background: none;
+  border: 0;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .6px;
+  text-transform: uppercase;
+}
+.nav-tab:hover { color: #fff; }
+.nav-tab.active { color: #fff; }
+.nav-tab.active::after {
+  content: "";
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 0;
+  height: 3px;
+  border-radius: 3px 3px 0 0;
+  background: linear-gradient(90deg, #1fe3ff, #ff2e9a);
+  box-shadow: 0 0 12px #ff2e9a;
+}
+
+.top-right { display: flex; align-items: center; gap: 10px; }
+
+.balance-pill {
+  height: 38px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 4px 0 12px;
+  background: #0d1017;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.balance-pill b { color: #fff; font-size: 15px; min-width: 60px; text-align: right; }
+.balance-pill .coin { margin-right: 0; }
+
+.profile-chip {
+  height: 38px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px 0 4px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: #fff;
+  font-weight: 600;
+}
+.profile-chip:hover { border-color: var(--line-2); }
+.profile-name { max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--orange), #8847ff);
+  color: #fff;
+  font-weight: 800;
+  font-size: 14px;
+}
+
+/* =========================================================
+   ОБЩАЯ РАЗМЕТКА
+   ========================================================= */
+.wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 26px 20px 60px;
+}
+
+.view { display: none; }
+.view.active { display: block; }
+
+.page-head { margin-bottom: 20px; }
+.page-head h1 {
+  font-size: 26px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.page-head h1::before {
+  content: "";
+  width: 4px;
+  height: 24px;
+  border-radius: 2px;
+  background: var(--orange);
+}
+.page-head p { margin: 6px 0 0 16px; color: var(--muted); }
+
+/* ---------- панели ---------- */
+
+/* панели: тонкое мерцание рамки */
+
+/* ===== стекло: панели и сайдбар полупрозрачные, пол виден сквозь них (карточки кейсов не меняются) ===== */
+
+.panel {
+  background: linear-gradient(180deg, rgba(16,14,26,.5), rgba(8,6,14,.4));
+  border: 1px solid #2a1d4a;
+  border-radius: 4px;
+  padding: 18px;
+  position: relative;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.04), 0 0 24px rgba(31,227,255,.06);
+  animation: panelGlow 6s ease-in-out infinite;
+  border-color: rgba(31,227,255,.22);
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 30px 0 16px;
+}
+.section-head h2 {
+  font-size: 20px;
+  font-weight: 800;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-head h2::before {
+  content: "";
+  width: 4px;
+  height: 20px;
+  border-radius: 2px;
+  background: var(--orange);
+}
+
+.tools { display: flex; gap: 10px; }
+
+.search { position: relative; }
+.search-icon {
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  transform: translateY(-52%);
+  color: var(--muted);
+  font-size: 16px;
+}
+.search input,
+select,
+input[type="text"] {
+  height: 38px;
+  background: #0d1017;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: #fff;
+  padding: 0 12px;
+  outline: none;
+}
+.search input { width: 240px; padding-left: 32px; }
+select { padding-right: 8px; }
+.search input:focus,
+select:focus,
+input[type="text"]:focus { border-color: var(--orange); }
+
+/* =========================================================
+   ПРОМО-БАННЕР
+   ========================================================= */
+.promo {
+  position: relative;
+  height: 168px;
+  overflow: hidden;
+  border-radius: 12px;
+  border: 1px solid #3a2a22;
+  background:
+    radial-gradient(500px 220px at 85% 60%, rgba(255, 151, 57, .25), transparent 70%),
+    linear-gradient(100deg, #2b1c15 0%, #33210f 30%, #1c2232 70%, #141a27 100%);
+  display: flex;
+  align-items: center;
+  padding: 0 40px;
+}
+.promo-text { position: relative; z-index: 2; }
+.promo-kicker {
+  font-size: 12px;
+  color: var(--orange-2);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 700;
+}
+.promo-title {
+  margin: 6px 0 14px;
+  font-size: 40px;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 0 4px 20px rgba(255, 151, 57, .35);
+}
+.promo-title span { color: var(--orange-2); }
+.promo-row { display: flex; align-items: center; gap: 12px; }
+.promo-label { color: var(--text); font-size: 13px; }
+.promo-code {
+  padding: 7px 14px;
+  border: 1px dashed var(--orange);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, .3);
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+.promo-timer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 14px;
+  font-size: 12px;
+  color: var(--text);
+}
+.promo-timer img { width: 22px; height: 22px; }
+.promo-timer b { color: #fff; font-size: 14px; font-variant-numeric: tabular-nums; }
+.promo-voucher {
+  position: absolute;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 150px;
+  height: 142px;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 25px rgba(255, 151, 57, .35));
+}
+
+/* ---------- Live drop ---------- */
+@keyframes pulse { 50% { opacity: .35; } }
+
+.feed {
+  flex: 1;
+  display: flex;
+  gap: 8px;
+  overflow: hidden;
+}
+@keyframes slideIn { from { opacity: 0; transform: translateX(-12px); } }

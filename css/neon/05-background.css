@@ -1,0 +1,320 @@
+/* neon/05-background.css — Фон: аврора, солнце, пол, коридор (вариант 03).
+   Порядок подключения важен (каскад): см. index.html. */
+/* =========================================================
+   ФОН v2 — слои под интерфейсом (только неон-тема)
+   Все слои: pointer-events: none, под контентом (z-index -2).
+   ========================================================= */
+.fx-layers {
+  position: fixed; inset: 0; z-index: -2; pointer-events: none; overflow: hidden;
+  background: radial-gradient(120% 90% at 50% 0%, #140b26 0%, #07060d 60%, #050409 100%);
+}
+
+/* 1. аврора: три мягких цветных пятна дрейфуют и дышат */
+.fx-aurora { position: absolute; inset: -10%; }
+.fx-aurora i {
+  position: absolute; width: 60vmax; height: 60vmax; border-radius: 50%;
+  will-change: transform; opacity: .55;
+}
+.fx-aurora i:nth-child(1) {
+  left: -18vmax; top: -22vmax;
+  background: radial-gradient(circle, rgba(255,46,154,.42) 0%, rgba(255,46,154,.12) 35%, transparent 65%);
+  animation: auDrift1 26s ease-in-out infinite alternate;
+}
+.fx-aurora i:nth-child(2) {
+  right: -20vmax; top: -10vmax;
+  background: radial-gradient(circle, rgba(31,227,255,.36) 0%, rgba(31,227,255,.10) 35%, transparent 65%);
+  animation: auDrift2 31s ease-in-out infinite alternate;
+}
+.fx-aurora i:nth-child(3) {
+  left: 20vw; bottom: -34vmax;
+  background: radial-gradient(circle, rgba(155,92,255,.40) 0%, rgba(155,92,255,.10) 38%, transparent 65%);
+  animation: auDrift3 22s ease-in-out infinite alternate;
+}
+@keyframes auDrift1 { from { transform: translate(0,0) scale(1); } to { transform: translate(38vw, 16vh) scale(1.2); } }
+@keyframes auDrift2 { from { transform: translate(0,0) scale(1.1); } to { transform: translate(-30vw, 22vh) scale(.9); } }
+@keyframes auDrift3 { from { transform: translate(0,0) scale(.95); } to { transform: translate(-16vw, -14vh) scale(1.25); } }
+
+/* 2. неоновое солнце над перспективной сеткой: полосы и пульс свечения */
+.fx-sun {
+  position: absolute; left: 50%; bottom: 22vh;
+  width: min(44vw, 520px); aspect-ratio: 1 / 1; transform: translateX(-50%);
+  border-radius: 50%;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 26px, rgba(7,6,13,.92) 26px 34px),
+    linear-gradient(180deg, #ffb35c 0%, #ff2e9a 48%, #7a2cff 100%);
+  opacity: .32;
+  will-change: opacity;
+  animation: sunPulse 7s ease-in-out infinite;
+}
+/* свечение — статичный radial-gradient (без анимации box-shadow: она перерисовывала бы кадр) */
+.fx-sun::before {
+  content: ""; position: absolute; inset: -60%; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,46,154,.30) 0%, rgba(155,92,255,.12) 40%, transparent 65%);
+}
+@keyframes sunPulse {
+  0%, 100% { opacity: .28; }
+  50%      { opacity: .42; }
+}
+
+/* 3. световые лучи: два диагональных луча медленно качаются по экрану */
+.fx-beam {
+  position: absolute; left: -20%; top: 30%; width: 140%; height: 3px;
+  background: linear-gradient(90deg, transparent, rgba(31,227,255,.0) 20%, rgba(31,227,255,.55) 50%, rgba(31,227,255,0) 80%, transparent);
+  opacity: .5; will-change: transform;
+}
+.fx-beam-a { transform: rotate(-16deg); animation: beamSwing 16s ease-in-out infinite alternate; }
+.fx-beam-b {
+  top: 62%; background: linear-gradient(90deg, transparent, rgba(255,46,154,0) 20%, rgba(255,46,154,.5) 50%, rgba(255,46,154,0) 80%, transparent);
+  transform: rotate(11deg); animation: beamSwing 21s ease-in-out infinite alternate-reverse;
+}
+@keyframes beamSwing { from { transform: rotate(-16deg) translateX(-4%); } to { transform: rotate(-9deg) translateX(4%); } }
+.fx-beam-b { animation-name: beamSwingB; }
+@keyframes beamSwingB { from { transform: rotate(11deg) translateX(3%); } to { transform: rotate(4deg) translateX(-3%); } }
+
+/* 4. большое вращающееся кольцо в правом верхнем углу (HUD) */
+.fx-ring {
+  position: absolute; right: -180px; top: -180px; width: 520px; height: 520px; border-radius: 50%;
+  border: 1px dashed rgba(31,227,255,.22);
+  box-shadow: inset 0 0 60px rgba(31,227,255,.06), 0 0 40px rgba(31,227,255,.08);
+  animation: ringSpin 90s linear infinite;
+}
+.fx-ring::before {
+  content: ""; position: absolute; inset: 42px; border-radius: 50%;
+  border: 2px solid transparent; border-top-color: rgba(255,46,154,.5); border-left-color: rgba(255,46,154,.2);
+}
+.fx-ring::after {
+  content: ""; position: absolute; inset: 42px; border-radius: 50%;
+  border: 2px solid transparent; border-top-color: rgba(255,46,154,.5); border-left-color: rgba(255,46,154,.2);
+}
+.fx-ring::after { inset: 96px; border-top-color: rgba(155,92,255,.55); border-left-color: transparent; border-right-color: rgba(31,227,255,.35); animation: ringSpin 40s linear infinite reverse; }
+@keyframes ringSpin { to { transform: rotate(360deg); } }
+
+/* 5. сканирующая линия: медленно проходит сверху вниз */
+.fx-scan {
+  position: absolute; left: 0; right: 0; top: -10px; height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(31,227,255,.7), rgba(255,46,154,.6), transparent);
+  box-shadow: 0 0 18px rgba(31,227,255,.6);
+  opacity: .5; animation: scanDown 9s linear infinite;
+}
+@keyframes scanDown { from { transform: translateY(-10px); opacity: 0; } 8% { opacity: .6; } 92% { opacity: .6; } to { transform: translateY(105vh); opacity: 0; } }
+
+/* 6. курсорный свет: мягкое пятно за курсором (переменные --mx / --my ставит fx.js) */
+.fx-spot {
+  position: absolute; left: 0; top: 0;
+  width: 720px; height: 720px; border-radius: 50%;
+  transform: translate3d(calc(var(--mx, 640px) - 360px), calc(var(--my, 240px) - 360px), 0);
+  background: radial-gradient(circle, rgba(255,46,154,.14) 0%, rgba(31,227,255,.06) 35%, transparent 65%);
+  will-change: transform;
+}
+
+/* 7. виньетка по краям и лёгкие CRT-полосы */
+.fx-vignette {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 45%, transparent 55%, rgba(0,0,0,.65) 100%);
+}
+.fx-crt {
+  position: absolute; inset: 0; opacity: .5;
+  background: repeating-linear-gradient(180deg, rgba(255,255,255,.018) 0 1px, transparent 1px 3px);
+}
+
+/* 8. HUD-уголки экрана: мигают вразнобой */
+.fx-corner { position: absolute; width: 46px; height: 46px; border: 2px solid rgba(31,227,255,.55); filter: drop-shadow(0 0 6px rgba(31,227,255,.6)); animation: cornerBlink 5s ease-in-out infinite; }
+.fx-corner.tl { left: 14px; top: 14px; border-right: 0; border-bottom: 0; }
+.fx-corner.tr { right: 14px; top: 14px; border-left: 0; border-bottom: 0; border-color: rgba(255,46,154,.6); filter: drop-shadow(0 0 6px rgba(255,46,154,.6)); animation-delay: -1.5s; }
+.fx-corner.bl { left: 14px; bottom: 14px; border-right: 0; border-top: 0; border-color: rgba(155,92,255,.6); filter: drop-shadow(0 0 6px rgba(155,92,255,.6)); animation-delay: -3s; }
+.fx-corner.br { right: 14px; bottom: 14px; border-left: 0; border-top: 0; animation-delay: -4.2s; }
+@keyframes cornerBlink { 0%, 100% { opacity: .45; } 50% { opacity: 1; } }
+
+
+/* reduced-motion: все фоновые анимации выключены, слои остаются статичными */
+@media (prefers-reduced-motion: reduce) {
+  .fx-aurora i, .fx-sun, .fx-beam, .fx-ring, .fx-ring::after, .fx-scan, .fx-corner {
+    animation: none !important; transition: none !important;
+  }
+  .fx-scan { display: none; }
+}
+
+
+/* =========================================================
+   ФОН v3: стеклянно-неоновый пол (как на референсе)
+   Перспективная решётка с бегущими линиями, стеклянный блик,
+   светящаяся линия горизонта с отражением и световые столбы.
+   ========================================================= */
+.fx-floor {
+  position: absolute; left: -35%; right: -35%; bottom: -4%; height: 52vh;
+  transform: perspective(520px) rotateX(64deg); transform-origin: 50% 100%;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(40,10,60,0) 0%, rgba(30,8,50,.55) 35%, rgba(8,5,18,.92) 100%);
+  -webkit-mask-image: linear-gradient(to top, #000 45%, transparent 98%);
+          mask-image: linear-gradient(to top, #000 45%, transparent 98%);
+  box-shadow: inset 0 60px 90px -30px rgba(255,46,154,.30), inset 0 0 120px rgba(31,227,255,.08);
+}
+/* решётка: двигается на одну ячейку → бесшовный бесконечный ход к зрителю (transform, без перерисовки) */
+.fx-floor-grid {
+  position: absolute; left: 0; right: 0; top: 0; height: calc(100% + 72px);
+  background-image:
+    linear-gradient(rgba(255,46,154,.75) 2px, transparent 2px),
+    linear-gradient(90deg, rgba(31,227,255,.55) 2px, transparent 2px);
+  background-size: 72px 72px;
+  filter: drop-shadow(0 0 6px rgba(255,46,154,.6));
+  will-change: transform;
+  animation: floorMove 1.4s linear infinite;
+}
+@keyframes floorMove { from { transform: translate3d(0,0,0); } to { transform: translate3d(0,-72px,0); } }
+/* стеклянный блик, медленно проходит по полу */
+.fx-floor::after {
+  content: ""; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%;
+  background: linear-gradient(100deg, transparent 0%, rgba(255,255,255,.08) 45%, rgba(255,255,255,.16) 50%, rgba(255,255,255,.04) 55%, transparent 100%);
+  animation: floorSheen 7s ease-in-out infinite;
+  will-change: transform;
+}
+@keyframes floorSheen { 0% { transform: translateX(0); } 60%, 100% { transform: translateX(340%); } }
+
+/* линия горизонта: яркая неон-кромка с отражением на полу */
+.fx-horizon {
+  position: absolute; left: 0; right: 0; bottom: calc(52vh * 0.96 + 2px); height: 3px;
+  background: linear-gradient(90deg, transparent 0%, #ff2e9a 25%, #ffffff 50%, #1fe3ff 75%, transparent 100%);
+  box-shadow: 0 0 22px 5px rgba(255,46,154,.65), 0 0 70px 14px rgba(31,227,255,.25);
+  -webkit-box-reflect: below 0 linear-gradient(transparent 30%, rgba(255,255,255,.45));
+  animation: horizonPulse 4.5s ease-in-out infinite;
+}
+@keyframes horizonPulse { 0%,100% { opacity: .85; } 50% { opacity: 1; } }
+
+/* световые столбы у краёв: мягко мерцают */
+.fx-pillar {
+  position: absolute; bottom: 0; width: 170px; height: 78vh; filter: blur(22px); opacity: .45;
+  animation: pillarFlick 6s ease-in-out infinite;
+}
+.fx-pillar-l { left: 2%; background: linear-gradient(0deg, rgba(255,46,154,.9), rgba(255,46,154,0)); }
+.fx-pillar-r { right: 2%; background: linear-gradient(0deg, rgba(31,227,255,.85), rgba(31,227,255,0)); animation-delay: -3s; }
+@keyframes pillarFlick { 0%,100% { opacity: .35; } 45% { opacity: .55; } 50% { opacity: .3; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-floor-grid, .fx-floor::after, .fx-horizon, .fx-pillar { animation: none !important; }
+}
+/* сетка пола ярче и толще */
+.fx-floor-grid {
+  background-image:
+    linear-gradient(rgba(255,46,154,.95) 2px, transparent 2px),
+    linear-gradient(90deg, rgba(31,227,255,.75) 2px, transparent 2px);
+}
+/* пол: меньше наклон (линии реже сжимаются), мягче маска и светлее низ */
+.fx-floor {
+  transform: perspective(620px) rotateX(56deg);
+  background: linear-gradient(180deg, rgba(40,10,60,0) 0%, rgba(30,8,50,.35) 30%, rgba(10,6,20,.55) 100%);
+  -webkit-mask-image: linear-gradient(to top, #000 62%, transparent 100%);
+          mask-image: linear-gradient(to top, #000 62%, transparent 100%);
+}
+/* темнее: фон, аврора, солнце, виньетка */
+.fx-layers { background: radial-gradient(120% 90% at 50% 0%, #0b0615 0%, #040307 55%, #010103 100%); }
+.fx-aurora i { opacity: .26; }
+.fx-spot { opacity: .6; }
+.fx-vignette { background: radial-gradient(ellipse at 50% 42%, transparent 40%, rgba(0,0,0,.85) 100%); }
+.fx-crt { opacity: .35; }
+@keyframes sunPulse {
+  0%, 100% { opacity: .16; }
+  50%      { opacity: .26; }
+}
+
+/* пол: тёмное влажное стекло */
+.fx-floor {
+  background:
+    linear-gradient(180deg, rgba(40,10,60,0) 0%, rgba(24,6,40,.45) 30%, rgba(4,3,10,.8) 100%);
+}
+/* мокрые пятна-отражения: мягкие цветные блики, медленно дышат */
+.fx-floor::before {
+  content: ""; position: absolute; inset: -10% 0 0 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 28% 22% at 24% 42%, rgba(255,46,154,.28), transparent 70%),
+    radial-gradient(ellipse 30% 20% at 74% 58%, rgba(31,227,255,.24), transparent 70%),
+    radial-gradient(ellipse 22% 16% at 50% 78%, rgba(155,92,255,.22), transparent 70%);
+  animation: wetPulse 9s ease-in-out infinite alternate;
+}
+@keyframes wetPulse { from { opacity: .55; } to { opacity: 1; } }
+
+/* отражения неоновых огней: вертикальные полосы от горизонта вниз */
+.fx-streaks i {
+  position: absolute; top: calc(52vh * 0.96 + 4px); width: 12px; height: 40vh;
+  border-radius: 6px; filter: blur(4px); opacity: .45; mix-blend-mode: screen;
+  background: linear-gradient(180deg, var(--c), transparent 85%);
+  animation: streakFlick 5s ease-in-out infinite;
+}
+.fx-streaks i:nth-child(1) { left: 9%;  --c: rgba(255,46,154,.9);  height: 30vh; animation-duration: 6s; }
+.fx-streaks i:nth-child(2) { left: 22%; --c: rgba(31,227,255,.8);  height: 46vh; animation-delay: -2s; }
+.fx-streaks i:nth-child(3) { left: 37%; --c: rgba(255,255,255,.55); height: 22vh; width: 6px; animation-delay: -3.5s; }
+.fx-streaks i:nth-child(4) { left: 52%; --c: rgba(155,92,255,.85); height: 38vh; animation-delay: -1s; }
+.fx-streaks i:nth-child(5) { left: 66%; --c: rgba(31,227,255,.7);  height: 28vh; width: 16px; animation-delay: -4s; }
+.fx-streaks i:nth-child(6) { left: 80%; --c: rgba(255,46,154,.75); height: 44vh; animation-delay: -2.5s; }
+.fx-streaks i:nth-child(7) { left: 92%; --c: rgba(255,255,255,.4); height: 26vh; width: 6px; animation-delay: -5s; }
+@keyframes streakFlick {
+  0%, 100% { opacity: .3; }
+  30% { opacity: .7; }
+  55% { opacity: .4; }
+}
+
+/* горизонт ярче и с отражением */
+.fx-horizon { box-shadow: 0 0 30px 6px rgba(255,46,154,.75), 0 0 90px 18px rgba(31,227,255,.3); }
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-floor::before, .fx-streaks i { animation: none !important; }
+}
+
+/* ============================================================
+   ФОН: выбранный вариант 03 — неоновый коридор с мокрым полом
+   Картинка на весь экран + тёмное затемнение; слои пола/солнца/лучей скрыты.
+   ============================================================ */
+.fx-layers {
+  background: #04030a url("../../img/bg/bg_corridor.jpg") center / cover no-repeat;
+}
+.fx-layers::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse at 50% 40%, rgba(4,3,10,.35) 0%, rgba(4,3,10,.78) 75%, rgba(2,1,5,.92) 100%);
+}
+.fx-layers > .fx-aurora {
+  display: none !important;
+}
+.fx-layers > .fx-sun {
+  display: none !important;
+}
+.fx-layers > .fx-beam {
+  display: none !important;
+}
+.fx-layers > .fx-ring {
+  display: none !important;
+}
+.fx-layers > .fx-scan {
+  display: none !important;
+}
+.fx-layers > .fx-spot {
+  display: none !important;
+}
+.fx-layers > .fx-vignette {
+  display: none !important;
+}
+.fx-layers > .fx-crt {
+  display: none !important;
+}
+.fx-layers > .fx-floor {
+  display: none !important;
+}
+.fx-layers > .fx-horizon {
+  display: none !important;
+}
+.fx-layers > .fx-streaks {
+  display: none !important;
+}
+.fx-layers > .fx-pillar {
+  display: none !important;
+}
+.fx-layers > .fx-pillar-l {
+  display: none !important;
+}
+.fx-layers > .fx-pillar-r {
+  display: none !important;
+}
+.fx-layers > .fx-corner { z-index: 1; }
+/* затемнение мягче в центре: коридор читается, края остаются тёмными */
+.fx-layers::after {
+  background: radial-gradient(ellipse at 50% 35%, rgba(4,3,10,0) 0%, rgba(4,3,10,.35) 60%, rgba(2,1,5,.8) 100%);
+}

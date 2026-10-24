@@ -1,0 +1,164 @@
+/* neon/07-achievements.css — Достижения в профиле и уведомления.
+   Порядок подключения важен (каскад): см. index.html. */
+/* ===== ДОСТИЖЕНИЯ В ПРОФИЛЕ (компактная карточка в слоте под статистикой) ===== */
+.pf-ach { grid-column: 1; grid-row: 2; display: flex; flex-direction: column; min-height: 0; overflow: hidden; position: relative; }
+.pf-ach::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(105deg, transparent 40%, rgba(31,227,255,.06) 50%, transparent 60%);
+  background-size: 250% 100%; animation: achSweep 7s linear infinite;
+}
+@keyframes achSweep { from { background-position: 150% 0; } to { background-position: -150% 0; } }
+.pf-ach-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+.pf-ach-title { display: flex; align-items: center; gap: 10px; color: var(--neon-c); min-width: 0; }
+.pf-ach-title b { display: block; font-family: Orbitron, sans-serif; font-size: 13px; letter-spacing: .08em; color: var(--text-strong); text-transform: uppercase; }
+.pf-ach-title small { display: block; font-size: 11px; color: var(--muted); letter-spacing: .14em; text-transform: uppercase; }
+.pf-ach-count { display: flex; align-items: baseline; gap: 4px; color: var(--muted); font-size: 14px; white-space: nowrap; }
+.pf-ach-count b { color: var(--text-strong); font-size: 18px; font-weight: 800; }
+.pf-ach-count em { font-style: normal; color: var(--neon-c); margin-left: 6px; text-shadow: 0 0 10px rgba(31,227,255,.6); }
+.pf-ach-bar { position: relative; height: 8px; border-radius: 6px; background: #120e22; border: 1px solid var(--line); overflow: hidden; margin-bottom: 12px; }
+.pf-ach-bar i {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-radius: 6px;
+  background: linear-gradient(90deg, var(--neon-m), var(--neon-v), var(--neon-c));
+  box-shadow: 0 0 12px rgba(31,227,255,.6); transition: width .8s cubic-bezier(.2,.8,.2,1);
+}
+.pf-ach-bar i::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent);
+  background-size: 60px 100%; background-repeat: no-repeat; animation: achShine 2.4s linear infinite;
+}
+@keyframes achShine { from { background-position: -60px 0; } to { background-position: 400px 0; } }
+.pf-ach-grid {
+  flex: 1; min-height: 0; overflow: hidden; align-content: start;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(42px, 1fr)); gap: 8px;
+}
+.pf-ach-tile {
+  position: relative; height: 42px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(180deg, #161027, #0c0917);
+  border: 1px solid var(--line); color: var(--muted); transition: transform .2s, box-shadow .2s;
+}
+.pf-ach-tile.is-done { color: var(--tile-c, var(--neon-c)); border-color: var(--tile-c, var(--neon-c)); box-shadow: 0 0 12px -4px var(--tile-c, var(--neon-c)); cursor: default; }
+.pf-ach-tile.is-done:hover { transform: translateY(-2px) scale(1.06); }
+.pf-ach-tile.is-done::after {
+  content: ""; position: absolute; inset: -1px; border-radius: 8px; pointer-events: none;
+  background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,.22) 50%, transparent 65%);
+  background-size: 300% 100%; animation: achShine 3.2s linear infinite;
+}
+.pf-ach-tile.is-lock { opacity: .4; filter: grayscale(1); }
+.pf-ach-tile.is-empty { border-style: dashed; color: rgba(122,124,168,.5); font-family: Orbitron, sans-serif; font-size: 16px; }
+.pf-ach-tile.r-uncommon { --tile-c: #5e98d9; }
+
+/* ===== ДОСТИЖЕНИЯ: цвета редкости, кликабельные карточки, окна ===== */
+.pf-ach-tile.r-common { --tile-c: #b0c3d9; }
+.pf-ach-tile.r-rare { --tile-c: #4b69ff; }
+.pf-ach-tile.r-epic { --tile-c: #8847ff; }
+.pf-ach-tile.r-legendary { --tile-c: #d32ce6; }
+.pf-ach-tile.r-knife { --tile-c: #e4ae39; }
+.clickable { cursor: pointer; transition: transform .2s, border-color .2s, box-shadow .2s; }
+.clickable:hover { border-color: var(--neon-c); box-shadow: 0 0 18px -6px rgba(31,227,255,.7); transform: translateY(-2px); }
+
+.modal-wide { width: 720px; max-width: calc(100vw - 32px); }
+.modal-brand { display: flex; align-items: center; gap: 12px; }
+.modal-brand b { flex: 1; font-family: Orbitron, sans-serif; letter-spacing: .08em; text-transform: uppercase; color: var(--text-strong); font-size: 15px; }
+.modal-logo { height: 28px; width: auto; filter: drop-shadow(0 0 8px rgba(255,46,154,.5)); }
+.ach-modal { padding: 0; overflow: hidden; display: flex; flex-direction: column; max-height: calc(100vh - 48px); }
+.stats-modal { padding: 0; overflow: hidden; display: flex; flex-direction: column; max-height: calc(100vh - 48px); }
+.ach-modal .modal-head { padding: 16px 20px; border-bottom: 1px solid var(--line); margin: 0; }
+.stats-modal .modal-head { padding: 16px 20px; border-bottom: 1px solid var(--line); margin: 0; }
+.stats-body { overflow-y: auto; padding: 16px 20px 20px; }
+
+.ach-prog { display: flex; justify-content: space-between; align-items: baseline; padding: 16px 20px 6px; color: var(--muted); font-size: 14px; }
+.ach-prog b { color: var(--text-strong); }
+.ach-prog-pct { color: var(--neon-c) !important; text-shadow: 0 0 10px rgba(31,227,255,.6); font-size: 18px; }
+.ach-prog-bar { margin: 0 20px 14px; }
+
+.ach-list { overflow-y: auto; padding: 0 20px 20px; display: flex; flex-direction: column; gap: 8px; }
+.ach-row {
+  display: grid; grid-template-columns: 44px 1fr auto; align-items: center; gap: 14px;
+  padding: 10px 14px; border-radius: 10px; border: 1px solid var(--line);
+  background: linear-gradient(180deg, #161027, #0c0917); color: var(--muted);
+  animation: achIn .35s both;
+}
+@keyframes achIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.ach-row.is-done { color: var(--tile-c, var(--neon-c)); border-color: var(--tile-c, var(--neon-c)); box-shadow: inset 0 0 18px -10px var(--tile-c, var(--neon-c)); }
+.ach-row.is-lock { opacity: .55; }
+.ach-row.is-lock .ach-ico { filter: grayscale(1); }
+.ach-ico {
+  width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+  border: 1px solid currentColor; background: rgba(6,4,14,.6);
+}
+.ach-row.is-done .ach-ico { box-shadow: 0 0 12px -3px currentColor; }
+.ach-txt { min-width: 0; }
+.ach-txt b { display: block; color: var(--text-strong); font-size: 15px; }
+.ach-txt small { display: block; color: var(--muted); font-size: 13px; margin-top: 2px; }
+.ach-meta { text-align: right; white-space: nowrap; }
+.ach-diff { display: block; font-family: Orbitron, sans-serif; font-size: 11px; color: var(--text); letter-spacing: .06em; }
+.ach-meta em { font-style: normal; font-size: 12px; color: var(--muted); }
+.ach-row.is-done .ach-meta em { color: var(--green); }
+
+/* ===== v4: карточка достижений — фиксированный размер, 5 + 5 плиток ===== */
+.pf-ach { contain: size; }
+.pf-ach .pf-ach-grid {
+  flex: 1; min-height: 0; overflow: hidden;
+  display: flex; flex-direction: column; gap: 10px; align-content: initial;
+}
+.pf-ach-sec small {
+  display: block; font-size: 10px; color: var(--muted); letter-spacing: .14em;
+  text-transform: uppercase; margin-bottom: 6px;
+}
+.pf-ach-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.pf-ach-row .pf-ach-tile { height: auto; aspect-ratio: 1 / 1; }
+
+/* ===== v5: уплотнение, чтобы 5 + 5 плиток влезли в карточку 336×180 ===== */
+.pf-ach { padding: 14px 16px; }
+.pf-ach-head { margin-bottom: 8px; }
+.pf-ach-bar { margin-bottom: 10px; }
+.pf-ach-grid { gap: 8px; }
+.pf-ach-sec small { font-size: 9.5px; margin-bottom: 3px; line-height: 1.2; }
+.pf-ach-row { gap: 8px; }
+.pf-ach-row .pf-ach-tile { height: 30px; aspect-ratio: auto; }
+.pf-ach-row .pf-ach-tile svg { width: 16px; height: 16px; }
+/* v5b: ещё чуть плотнее — последняя строка плиток не должна выходить за карточку */
+.pf-ach-grid { gap: 6px; }
+.pf-ach-row { gap: 6px; }
+.pf-ach-sec small { margin-bottom: 2px; }
+.pf-ach-row .pf-ach-tile { height: 27px; }
+
+/* ===== уведомление «Достижение получено» (в стиле Steam) ===== */
+#ach-toasts {
+  position: fixed; right: 18px; bottom: 18px; z-index: 9000;
+  display: flex; flex-direction: column; align-items: flex-end; gap: 10px;
+  pointer-events: none;
+}
+.ach-toast {
+  --tile-c: var(--neon-c);
+  width: 320px; display: flex; align-items: center; gap: 12px;
+  padding: 12px 14px; border-radius: 10px;
+  background: linear-gradient(180deg, #1a1430, #0c0917);
+  border: 1px solid var(--tile-c); color: #fff;
+  box-shadow: 0 0 22px -6px var(--tile-c), inset 0 0 18px -12px var(--tile-c);
+  transform: translateX(130%); opacity: 0;
+  transition: transform .5s cubic-bezier(.2,.9,.3,1.15), opacity .4s;
+}
+.ach-toast.in { transform: none; opacity: 1; }
+.ach-toast.out { transform: translateX(130%); opacity: 0; transition: transform .4s ease-in, opacity .35s; }
+.ach-toast.r-common { --tile-c: #b0c3d9; }
+.ach-toast.r-rare { --tile-c: #4b69ff; }
+.ach-toast.r-epic { --tile-c: #8847ff; }
+.ach-toast.r-legendary { --tile-c: #d32ce6; }
+.ach-toast.r-knife { --tile-c: #e4ae39; }
+.ach-toast-ico {
+  width: 46px; height: 46px; flex-shrink: 0; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--tile-c); border: 1px solid currentColor; background: rgba(6,4,14,.7);
+  box-shadow: 0 0 14px -3px currentColor;
+  animation: achPop .6s .15s both;
+}
+@keyframes achPop { from { transform: scale(.3) rotate(-25deg); } 60% { transform: scale(1.12); } to { transform: none; } }
+.ach-toast-txt { min-width: 0; }
+.ach-toast-txt small {
+  display: block; font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--neon-c); text-shadow: 0 0 8px rgba(31,227,255,.6);
+}
+.ach-toast-txt b { display: block; font-size: 15px; color: #fff; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ach-toast-txt span { display: block; font-size: 12px; color: var(--muted); margin-top: 2px; line-height: 1.3; }

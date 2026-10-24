@@ -1,0 +1,136 @@
+/* neon/08-auth.css — экран входа и регистрации, форма на весь сайт до входа,
+   рейтинг КС. Поверх остального интерфейса (z-index выше всего). */
+
+.auth-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(7, 6, 13, .86);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.auth-card {
+  position: relative;
+  width: 360px;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 26px 26px 22px;
+  background: var(--panel);
+  border: 1px solid var(--line-2);
+  box-shadow: 0 0 0 1px rgba(255, 46, 154, .18), 0 0 46px rgba(31, 227, 255, .16);
+}
+
+.auth-logo {
+  display: block;
+  margin: 0 auto 4px;
+  max-width: 220px;
+  height: auto;
+}
+
+.auth-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 1px solid var(--line-2);
+}
+
+.auth-tab {
+  padding: 9px 10px;
+  background: transparent;
+  border: 0;
+  color: #7f86b8;
+  font-family: "Orbitron", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.auth-tab.active {
+  color: #fff;
+  background: linear-gradient(90deg, rgba(255, 46, 154, .25), rgba(31, 227, 255, .18));
+  text-shadow: 0 0 10px rgba(255, 46, 154, .9);
+}
+
+.auth-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 12px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.auth-field input {
+  padding: 10px 12px;
+  background: #07060d;
+  border: 1px solid var(--line-2);
+  color: var(--text-strong);
+  font-family: "Rajdhani", sans-serif;
+  font-size: 16px;
+  letter-spacing: 0;
+  text-transform: none;
+  outline: none;
+}
+
+.auth-field input:focus {
+  border-color: var(--orange-2);
+  box-shadow: 0 0 14px rgba(31, 227, 255, .35);
+}
+
+.auth-hint {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.auth-error {
+  min-height: 18px;
+  font-size: 14px;
+  color: var(--red);
+  text-align: center;
+}
+
+.auth-submit {
+  width: 100%;
+  justify-content: center;
+}
+
+.auth-submit:disabled {
+  opacity: .6;
+  cursor: wait;
+}
+
+/* рейтинг КС: реальные игроки с сервера */
+.cs-rating-msg {
+  text-align: center;
+  color: var(--muted);
+  padding: 18px 8px;
+}
+
+.cs-table tr.me td {
+  color: var(--text-strong);
+}
+
+.set-account {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 10px 0 4px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.set-logout {
+  margin-left: auto;
+}

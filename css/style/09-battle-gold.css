@@ -1,0 +1,269 @@
+/* style/09-battle-gold.css — Battle, золотой апгрейд, цепочка и мистика.
+   Порядок подключения важен (каскад): см. index.html. */
+/* ===== Battle ===== */
+.bt-modes { display: flex; gap: 8px; margin: 14px 0; }
+.bt-mode { background: #171c25; border: 1px solid #2f374e; color: #bfcae3; border-radius: 8px; padding: 10px 18px; font-weight: 700; cursor: pointer; }
+.bt-mode.active { background: linear-gradient(90deg, #bb281e, #d3863c); border-color: transparent; color: #fff; }
+.bt-box { background: #171c25; border: 1px solid #2f374e; border-radius: 10px; padding: 16px; margin-bottom: 14px; }
+.bt-desc { color: #9aa0c8; font-size: 13px; line-height: 1.5; margin-bottom: 12px; }
+
+/* скины: выбор — циан, цены — циан */
+.bt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; max-height: 380px; overflow: auto; scrollbar-color: rgba(31,227,255,.5) transparent; }
+.bt-pick { background: rgba(8,6,16,.7); border: 2px solid #2f374e; border-radius: 8px; padding: 6px; color: #cfd6ff; cursor: pointer; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px; font: inherit; font-size: 11px; border-color: rgba(155,92,255,.3); }
+.bt-pick img { width: 100%; height: 70px; object-fit: contain; }
+.bt-pick.selected { border-color: #1fe3ff; box-shadow: 0 0 0 1px #1fe3ff, 0 0 22px rgba(31,227,255,.45); }
+.bt-pick-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+.bt-pick-price { color: #1fe3ff; font-weight: 700; }
+.bt-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; flex-wrap: wrap; color: #cfd6ff; font-size: 14px; }
+.bt-go { background: linear-gradient(90deg, #bb281e, #d3863c); color: #fff; border: 0; border-radius: 8px; padding: 12px 22px; font-weight: 700; cursor: pointer; }
+.bt-go:disabled { opacity: .4; cursor: not-allowed; }
+.bt-case-row { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+.bt-case-img { width: 110px; height: 104px; object-fit: contain; background: #11151c; border-radius: 8px; }
+.bt-select { flex: 1; background: #11151c; color: #e6ecf5; border: 1px solid #2f374e; border-radius: 8px; padding: 10px; font: inherit; }
+.bt-counts { display: flex; gap: 8px; margin-bottom: 4px; }
+.bt-count { background: rgba(8,6,16,.7); color: #cfd6ff; border: 1px solid #2f374e; border-radius: 8px; padding: 8px 14px; cursor: pointer; font: inherit; font-weight: 700; border-color: rgba(155,92,255,.3); }
+.bt-count.active { border-color: #1fe3ff; color: #fff; box-shadow: 0 0 16px rgba(31,227,255,.35); }
+.bt-result { background: rgba(10,8,18,.6); border: 1px solid #2f374e; border-radius: 10px; padding: 16px; border-color: rgba(31,227,255,.3); }
+.bt-result.win { border-color: #4caf7a; }
+.bt-result.lose { border-color: #ff2e9a; }
+.bt-verdict { font-size: 22px; font-weight: 800; margin-bottom: 4px; color: #bfcae3; }
+.bt-result.win .bt-verdict { color: #7ed9a6; }
+.bt-result.lose .bt-verdict { color: #eb4b4b; }
+.bt-note { color: #9aa0c8; font-size: 13px; margin-bottom: 12px; }
+.bt-versus { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.bt-side { background: #11151c; border-radius: 8px; padding: 10px; min-width: 0; }
+.bt-side-head { display: flex; justify-content: space-between; color: #bfcae3; margin-bottom: 8px; }
+.bt-items { display: flex; flex-wrap: wrap; gap: 8px; }
+.bt-item { width: 120px; border: 1px solid var(--rc); border-radius: 8px; padding: 6px; text-align: center; font-size: 11px; color: #bfcae3; background: #0d1117; }
+.bt-item img { width: 100%; height: 60px; object-fit: contain; }
+.bt-item-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bt-item-price { color: #e8b07a; font-weight: 700; }
+@media (max-width: 640px) { .bt-versus { grid-template-columns: 1fr; } }
+
+/* ===== Battle: хаб с карточками режимов ===== */
+.bt-hub-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 8px; }
+
+/* режим-карточки в хабе: магента для скинов, циан для кейсов */
+.bt-card { position: relative; height: 320px; border-radius: 16px; overflow: hidden; border: 1px solid #2f374e; padding: 0; cursor: pointer; background: #0b0e14; text-align: left; color: #fff; transition: transform .25s, box-shadow .25s, border-color .25s; border-color: rgba(31,227,255,.25); }
+.bt-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .6s; }
+.bt-card:hover { transform: translateY(-4px); }
+.bt-card:hover img { transform: scale(1.06); }
+.bt-card-shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(5,7,12,.05) 0%, rgba(5,7,12,.55) 50%, rgba(5,7,12,.96) 100%); }
+.bt-card-body { position: absolute; left: 0; right: 0; bottom: 0; padding: 22px; display: flex; flex-direction: column; gap: 6px; }
+.bt-card-tag { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #1fe3ff; }
+.bt-card-name { font-size: 34px; font-weight: 900; letter-spacing: .02em; line-height: 1.1; }
+.bt-card-desc { font-size: 13px; color: #c9d3e6; line-height: 1.5; max-width: 440px; }
+.bt-card-cta { margin-top: 6px; font-weight: 800; color: #1fe3ff; font-family: "Orbitron", sans-serif; font-size: 12px; letter-spacing: 1px; }
+.bt-card-skin:hover { border-color: #ff2e9a; box-shadow: 0 18px 50px -12px rgba(255,46,154,.55); }
+.bt-card-skin .bt-card-name { background: linear-gradient(90deg, #ff2e9a, #ffffff 60%, #1fe3ff); -webkit-background-clip: text; background-clip: text; color: transparent; font-family: "Orbitron", sans-serif; font-weight: 900; }
+.bt-card-case:hover { border-color: #2ee6d6; box-shadow: 0 18px 50px -12px rgba(46,230,214,.45); }
+.bt-card-case .bt-card-name { background: linear-gradient(90deg, #2ee6d6, #d05cf0); -webkit-background-clip: text; background-clip: text; color: transparent; }
+@media (max-width: 760px) { .bt-hub-cards { grid-template-columns: 1fr; } .bt-card { height: 250px; } }
+
+/* ===== Battle: общая страница режима ===== */
+/* ============================================================
+   BATTLE — неон-оформление Skin Battle и Case Battle
+   (старые оранжевые/коричневые цвета bt-* заменяются на неон)
+   ============================================================ */
+.bt-page { border: 1px solid rgba(31,227,255,.3); border-radius: 16px; padding: 22px; background: linear-gradient(180deg, rgba(14,11,26,.7), rgba(6,4,12,.6)); position: relative; overflow: hidden; box-shadow: 0 0 40px rgba(255,46,154,.12), inset 0 0 60px rgba(31,227,255,.03); }
+.bt-page .bt-box { background: rgba(10,12,18,.6); }
+.bt-back { background: transparent; border: 1px solid #2f374e; color: #cfd6ff; border-radius: 8px; padding: 8px 14px; cursor: pointer; margin-bottom: 14px; font-weight: 600; border-color: rgba(31,227,255,.35); font-family: "Orbitron", sans-serif; font-size: 11px; letter-spacing: 1px; }
+.bt-back:hover { border-color: #ff2e9a; color: #fff; box-shadow: 0 0 14px rgba(255,46,154,.45); }
+.bt-head { text-align: center; margin: 4px 0 18px; }
+.bt-title { font-size: 38px; font-weight: 900; letter-spacing: .08em; font-family: "Orbitron", sans-serif; background: linear-gradient(90deg, #ff2e9a, #ffffff 50%, #1fe3ff); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: titleShift 6s ease-in-out infinite; filter: drop-shadow(0 0 12px rgba(255,46,154,.45)); }
+.bt-sub { color: #9aa0c8; font-size: 13px; margin-top: 4px; }
+.bt-note-center { text-align: center; }
+
+/* ----- Skin Battle: огненная арена ----- */
+.bt-page.bt-skin { border-color: rgba(255,46,154,.35); background: radial-gradient(900px 320px at 50% -12%, rgba(255,46,154,.18), transparent 70%),
+    radial-gradient(600px 300px at 100% 110%, rgba(31,227,255,.12), transparent 70%),
+    linear-gradient(180deg, rgba(14,11,26,.7), rgba(6,4,12,.6)); }
+.bt-skin .bt-title { background: linear-gradient(90deg, #ff2e9a, #ffffff 50%, #1fe3ff); -webkit-background-clip: text; background-clip: text; color: transparent; font-family: "Orbitron", sans-serif; font-weight: 900; background-size: 200% 100%; animation: titleShift 6s ease-in-out infinite; filter: drop-shadow(0 0 12px rgba(255,46,154,.45)); }
+.bt-skin .bt-go { box-shadow: 0 8px 24px -8px rgba(211,134,60,.7); }
+.bt-arena { display: grid; grid-template-columns: 1fr auto 1fr; gap: 14px; align-items: stretch; margin-bottom: 6px; }
+
+/* арена: «Вы» — циан, «Бот» — магента */
+.bt-slot { position: relative; background: radial-gradient(circle at 50% 30%, rgba(255,255,255,.06), rgba(0,0,0,.5)), rgba(8,6,16,.7); border: 1px solid #2f374e; border-radius: 14px; padding: 14px; text-align: center; min-height: 270px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; overflow: hidden; }
+.bt-slot-me { border-color: rgba(31,227,255,.5); box-shadow: 0 0 22px rgba(31,227,255,.15); }
+.bt-slot-bot { border-color: rgba(255,46,154,.55); box-shadow: 0 0 26px rgba(255,46,154,.22), inset 0 0 40px rgba(255,46,154,.08); }
+.bt-slot-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #9aa0c8; font-family: "Orbitron", sans-serif; }
+.bt-slot-img { width: 80%; max-height: 165px; object-fit: contain; filter: drop-shadow(0 10px 24px var(--rc, #d3863c)); animation: bt-float 3.2s ease-in-out infinite; }
+.bt-slot-empty { width: 120px; height: 120px; border-radius: 50%; border: 2px dashed #3a4460; display: flex; align-items: center; justify-content: center; font-size: 48px; color: #cfd6ff; font-weight: 800; border-color: rgba(155,92,255,.5); }
+.bt-slot-bot .bt-slot-empty { animation: bt-pulse 2.2s ease-in-out infinite; border-color: rgba(255,46,154,.6); color: #ff2e9a; text-shadow: 0 0 12px rgba(255,46,154,.8); }
+.bt-slot-sub { color: #8b96a3; font-size: 12px; }
+.bt-slot-name { font-weight: 700; font-size: 14px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bt-slot-price { color: #1fe3ff; font-weight: 800; font-size: 14px; text-shadow: 0 0 10px rgba(31,227,255,.6); font-family: "Orbitron", sans-serif; }
+.bt-slot.reveal { animation: bt-pop .6s cubic-bezier(.2,1.4,.4,1); }
+.bt-vs { align-self: center; font-size: 34px; font-weight: 900; font-style: italic; color: #fff; text-shadow: 0 0 18px #ff2e9a, 0 0 4px #1fe3ff; animation: bt-pulse 1.4s ease-in-out infinite; font-family: "Orbitron", sans-serif; }
+.bt-vs span { display: inline-block; }
+.bt-banner { text-align: center; font-size: 30px; font-weight: 900; letter-spacing: .12em; margin: 14px 0 2px; animation: bt-pop .5s cubic-bezier(.2,1.4,.4,1); }
+.bt-banner.win { color: #7ed9a6; text-shadow: 0 0 22px rgba(76,175,122,.6); }
+.bt-banner.lose { color: #eb4b4b; text-shadow: 0 0 22px rgba(235,75,75,.55); }
+.bt-banner.tie { color: #bfcae3; }
+.bt-skin .bt-note { margin-bottom: 14px; }
+
+/* ----- Case Battle: неоновый стиль ----- */
+.bt-page.bt-case { border-color: #1f3a48; background: radial-gradient(800px 320px at 50% -12%, rgba(46,230,214,.2), transparent 70%), radial-gradient(600px 300px at 100% 100%, rgba(208,92,240,.18), transparent 70%), linear-gradient(rgba(46,230,214,.06) 1px, transparent 1px) 0 0 / 36px 36px, linear-gradient(90deg, rgba(46,230,214,.06) 1px, transparent 1px) 0 0 / 36px 36px, #0a0e15; }
+.bt-case .bt-title { background: linear-gradient(90deg, #2ee6d6, #7f8cff 50%, #d05cf0); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.bt-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 8px; max-height: 300px; overflow-y: auto; padding: 2px 4px 2px 2px; margin-bottom: 4px; }
+
+/* кейсы: плитки, счётчики, стадия */
+.bt-tile { background: rgba(8,6,16,.7); border: 1px solid #243047; border-radius: 10px; padding: 8px; color: #cfd6ff; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: border-color .2s, box-shadow .2s; border-color: rgba(155,92,255,.3); }
+.bt-tile img { width: 100%; height: 84px; object-fit: contain; }
+.bt-tile:hover { border-color: #2ee6d6; }
+.bt-tile.active { border-color: #1fe3ff; box-shadow: 0 0 16px rgba(31,227,255,.35); color: #fff; }
+.bt-tile-name { font-size: 11px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bt-tile-price { color: #2ee6d6; font-weight: 800; font-size: 12px; }
+.bt-stage { display: flex; align-items: center; gap: 18px; margin: 16px 0; padding: 14px 18px; border-radius: 14px; background: radial-gradient(circle at 25% 50%, rgba(46,230,214,.25), transparent 60%), radial-gradient(circle at 85% 50%, rgba(208,92,240,.25), transparent 60%), #0c1018; border: 1px solid #243047; }
+.bt-stage-img { width: 150px; height: 130px; object-fit: contain; filter: drop-shadow(0 0 18px rgba(46,230,214,.55)); animation: bt-float 3.2s ease-in-out infinite; }
+.bt-stage-name { font-size: 22px; font-weight: 800; }
+.bt-stage-price { color: #2ee6d6; font-weight: 700; margin-top: 2px; }
+.bt-stage-sub { color: #8b96a3; font-size: 12px; margin-top: 4px; }
+.bt-case .bt-count.active { border-color: #2ee6d6; color: #fff; box-shadow: 0 0 12px rgba(46,230,214,.35); }
+.bt-case .bt-go { background: linear-gradient(90deg, #2ee6d6, #7f8cff 50%, #d05cf0); color: #081018; font-weight: 800; box-shadow: 0 8px 24px -8px rgba(208,92,240,.6); }
+.bt-case .bt-go:disabled { color: #081018; }
+
+@keyframes bt-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes bt-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+@keyframes bt-pop { 0% { transform: scale(.6); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+@media (max-width: 640px) { .bt-arena { grid-template-columns: 1fr; } .bt-vs { justify-self: center; } .bt-stage { flex-direction: column; text-align: center; } }
+
+/* Золотой апгрейд: результат цепочки */
+#up-result.gold { box-shadow: 0 0 0 1px #ff2e9a, 0 0 30px rgba(255,46,154,.35); }
+#up-result.gold .res-kicker { color: #1fe3ff; }
+
+/* ===== Золотой апгрейд: анимации колеса ===== */
+/* появление золотой зоны: вырастает из центра и проявляется */
+.gold-zone { transform-box: view-box; transform-origin: 0 0; animation: goldIn .9s cubic-bezier(.2,1.3,.4,1) both; }
+@keyframes goldIn { from { opacity: 0; transform: scale(.35); } to { opacity: 1; transform: scale(1); } }
+/* в фазе появления золото мерцает и светится */
+.wheel-box.gold-reveal .gold-zone { animation: goldShine .42s ease-in-out 3; }
+@keyframes goldShine { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.7) drop-shadow(0 0 8px rgba(31,227,255,.95)); } }
+.wheel-box.gold-reveal .wheel { filter: drop-shadow(0 0 26px rgba(31,227,255,.6)); }
+/* бейдж «ЗОЛОТО» над колесом */
+.gold-badge { position: absolute; left: 50%; top: -18px; z-index: 5; transform: translateX(-50%); background: linear-gradient(90deg, #7ff0ff, #ff2e9a); color: #1e0716; font-weight: 900; letter-spacing: .22em; font-size: 13px; padding: 7px 16px; border-radius: 999px; box-shadow: 0 0 24px rgba(31,227,255,.75); white-space: nowrap; animation: goldBadgeIn .55s cubic-bezier(.2,1.6,.4,1) both; pointer-events: none; }
+@keyframes goldBadgeIn { from { opacity: 0; transform: translate(-50%, 12px) scale(.6); } to { opacity: 1; transform: translate(-50%, 0) scale(1); } }
+/* попадание в золото: пульс зоны и кольцо */
+.wheel-box.gold-hit .gold-zone { animation: goldHit .5s ease-in-out 3; }
+@keyframes goldHit { 0%, 100% { transform: scale(1); filter: brightness(1); } 50% { transform: scale(1.08); filter: brightness(1.8) drop-shadow(0 0 14px rgba(31,227,255,1)); } }
+.wheel-box.gold-hit::after { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 3px solid #1fe3ff; box-shadow: 0 0 30px #1fe3ff; pointer-events: none; animation: goldRing .9s ease-out forwards; }
+@keyframes goldRing { from { transform: scale(.45); opacity: .95; } to { transform: scale(1.3); opacity: 0; } }
+/* искры: вылетают из центра и гаснут */
+.gold-spark { position: absolute; left: 50%; top: 50%; width: 7px; height: 7px; margin: -3px 0 0 -3px; border-radius: 50%; background: radial-gradient(circle, #e6fbff 0%, #1fe3ff 55%, rgba(255,46,154,0) 100%); box-shadow: 0 0 8px #1fe3ff; pointer-events: none; opacity: 0; animation: goldSpark 1.2s ease-out var(--t, 0ms) forwards; transform: rotate(var(--a)) translateY(0); }
+@keyframes goldSpark { 0% { opacity: 0; transform: rotate(var(--a)) translateY(0) scale(.4); } 15% { opacity: 1; } 100% { opacity: 0; transform: rotate(var(--a)) translateY(calc(-1 * var(--d))) scale(1); } }
+
+/* ---- попадание в золото: стильный эффект ---- */
+.wheel-box.gold-hit { animation: goldShake .5s cubic-bezier(.36,.07,.19,.97) both; }
+@keyframes goldShake { 0%,100% { translate: 0 0; } 20% { translate: -5px 2px; } 40% { translate: 5px -2px; } 60% { translate: -3px 1px; } 80% { translate: 2px -1px; } }
+
+.gold-flash { position: absolute; inset: -12%; border-radius: 50%; pointer-events: none; z-index: 2; mix-blend-mode: screen;
+  background: radial-gradient(circle, rgba(216,248,255,.98) 0%, rgba(31,227,255,.6) 34%, rgba(255,46,154,0) 66%);
+  animation: goldFlash .8s ease-out forwards; }
+@keyframes goldFlash { 0% { opacity: 0; transform: scale(.4); } 14% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1.25); } }
+
+.gold-rays { position: absolute; inset: -35%; border-radius: 50%; pointer-events: none; z-index: 1; mix-blend-mode: screen;
+  background: repeating-conic-gradient(from 0deg, rgba(31,227,255,.55) 0deg 5deg, rgba(31,227,255,0) 5deg 15deg);
+  -webkit-mask: radial-gradient(circle, #000 18%, transparent 68%); mask: radial-gradient(circle, #000 18%, transparent 68%);
+  animation: goldRays 1.6s ease-out forwards; }
+@keyframes goldRays { 0% { opacity: 0; transform: rotate(-35deg) scale(.6); } 25% { opacity: 1; } 100% { opacity: 0; transform: rotate(70deg) scale(1.1); } }
+
+.gold-wave { position: absolute; left: 50%; top: 50%; width: 56px; height: 56px; margin: -28px 0 0 -28px; border-radius: 50%; pointer-events: none; z-index: 2;
+  border: 3px solid #1fe3ff; box-shadow: 0 0 22px #1fe3ff, inset 0 0 16px rgba(31,227,255,.6);
+  animation: goldWave 1.1s cubic-bezier(.1,.7,.3,1) forwards; }
+.gold-wave-2 { border-color: #d8f8ff; animation-delay: .18s; box-shadow: 0 0 16px #d8f8ff; }
+@keyframes goldWave { 0% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(5.2); } }
+
+.gold-pop { position: absolute; left: 50%; top: -4px; z-index: 4; pointer-events: none; white-space: nowrap;
+  font-weight: 900; font-size: 64px; line-height: 1; letter-spacing: .04em;
+  background: linear-gradient(180deg, #e6fbff 0%, #1fe3ff 50%, #ff2e9a 100%); -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 0 12px rgba(255,46,154,.95)) drop-shadow(0 3px 0 #3a0b33);
+  transform: translate(-50%, -50%); animation: goldPop 1.5s cubic-bezier(.2,1.4,.4,1) forwards; }
+@keyframes goldPop { 0% { opacity: 0; transform: translate(-50%,-50%) scale(.3); } 16% { opacity: 1; transform: translate(-50%,-50%) scale(1.2); }
+  28% { transform: translate(-50%,-50%) scale(1); } 72% { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%,-120%) scale(.9); } }
+
+.gold-shard { position: absolute; left: 50%; top: 50%; width: 12px; height: 5px; margin: -2.5px 0 0 -6px; pointer-events: none; opacity: 0;
+  background: linear-gradient(90deg, #e6fbff, #1fe3ff); clip-path: polygon(0 50%, 30% 0, 100% 50%, 30% 100%);
+  box-shadow: 0 0 8px #1fe3ff; transform: rotate(var(--a)) translateY(0);
+  animation: goldShard 1.3s cubic-bezier(.15,.7,.2,1) var(--t, 0ms) forwards; }
+@keyframes goldShard { 0% { opacity: 0; transform: rotate(var(--a)) translateY(0) scale(.6); } 15% { opacity: 1; }
+  100% { opacity: 0; transform: rotate(var(--a)) translateY(calc(-1 * var(--d))) rotate(300deg) scale(.3); } }
+
+#arrow.gold-land { animation: goldArrowFlash 1.2s ease-out forwards; }
+@keyframes goldArrowFlash { 0% { filter: drop-shadow(0 0 2px #fff) brightness(1.9); } 35% { filter: drop-shadow(0 0 10px #1fe3ff) drop-shadow(0 0 22px rgba(255,46,154,.9)) brightness(1.4); }
+  100% { filter: drop-shadow(0 0 6px #1fe3ff) brightness(1.05); } }
+
+/* ---- цепочка ×2: панель, свечение режима, вращающееся кольцо на прокруте, вспышки шагов ---- */
+.chain-hud { display: none; flex-direction: column; align-items: center; gap: 4px; margin: 0 auto 10px; padding: 8px 20px 9px; border-radius: 16px;
+  background: linear-gradient(180deg, rgba(31,227,255,.22), rgba(60,10,50,.18)); border: 1px solid rgba(31,227,255,.55);
+  box-shadow: 0 0 26px rgba(255,46,154,.35), inset 0 0 14px rgba(31,227,255,.15); text-align: center; animation: chainHudIn .5s cubic-bezier(.2,1.4,.4,1) both; }
+.chain-hud.on { display: flex; }
+.chain-hud .ch-title { font-size: 12px; font-weight: 900; letter-spacing: .24em; color: #1fe3ff; text-shadow: 0 0 10px rgba(255,46,154,.8); }
+.chain-hud .ch-val { font-size: 24px; font-weight: 900; background: linear-gradient(180deg,#e6fbff,#1fe3ff 55%,#ff2e9a); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.chain-hud .ch-dots { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.chain-hud .ch-dots i { width: 8px; height: 8px; border-radius: 50%; background: rgba(31,227,255,.28); }
+.chain-hud .ch-dots i.last { background: #1fe3ff; box-shadow: 0 0 10px #1fe3ff; animation: chainDot 1s ease-in-out infinite; }
+.chain-hud .ch-sub { font-size: 11px; color: #ff7ab8; letter-spacing: .04em; }
+@keyframes chainHudIn { from { opacity: 0; transform: translateY(-8px) scale(.96); } to { opacity: 1; transform: none; } }
+@keyframes chainDot { 0%,100% { transform: scale(1); } 50% { transform: scale(1.5); } }
+
+.wheel-box.chain-on .wheel { animation: chainAura 1.6s ease-in-out infinite; }
+@keyframes chainAura { 0%,100% { filter: drop-shadow(0 0 10px rgba(255,46,154,.35)); } 50% { filter: drop-shadow(0 0 24px rgba(31,227,255,.85)); } }
+
+.wheel-box.chain-spin::before { content: ""; position: absolute; inset: -16px; border-radius: 50%; pointer-events: none; z-index: 0;
+  background: conic-gradient(from 0deg, rgba(31,227,255,0) 0deg, rgba(31,227,255,.95) 28deg, rgba(31,227,255,0) 68deg, rgba(31,227,255,0) 360deg);
+  -webkit-mask: radial-gradient(circle, transparent 88%, #000 90%, #000 96%, transparent 98%); mask: radial-gradient(circle, transparent 88%, #000 90%, #000 96%, transparent 98%);
+  animation: chainSpin 1.2s linear infinite; }
+@keyframes chainSpin { to { transform: rotate(360deg); } }
+
+.wheel-box.chain-win { animation: goldShake .5s cubic-bezier(.36,.07,.19,.97) both; }
+.gold-wave.chain-protect { border-color: #7fd4ff; box-shadow: 0 0 22px #7fd4ff, inset 0 0 16px rgba(160,230,255,.5); }
+.gold-pop.pop-small { font-size: 40px; letter-spacing: .12em; }
+
+/* ---- мистический апгрейд: кнопка и портал вместо колеса ---- */
+.mults .mult-btn.mystic { grid-column: 1 / -1; position: relative; overflow: hidden; font-weight: 900; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: #f3e9ff;
+  border-color: rgba(190,140,255,.6); background: linear-gradient(90deg, rgba(110,50,220,.5), rgba(255,46,154,.32)); box-shadow: 0 0 18px rgba(170,110,255,.35), inset 0 0 12px rgba(216,248,255,.06); }
+.mults .mult-btn.mystic::before { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 30%, rgba(216,248,255,.35) 50%, transparent 70%); transform: translateX(-100%); animation: mysticSweep 2.6s ease-in-out infinite; }
+.mults .mult-btn.mystic.active { border-color: #1fe3ff; box-shadow: 0 0 26px rgba(31,227,255,.55); }
+@keyframes mysticSweep { 0%,60% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+
+.wheel-box.mystic-mode .wheel, .wheel-box.mystic-mode .arrow, .wheel-box.mystic-mode .wheel-center { opacity: 0; transition: opacity .35s; }
+.mystic-stage { position: absolute; inset: -10px; border-radius: 50%; z-index: 6; pointer-events: none; display: flex; align-items: center; justify-content: center;
+  animation: mysticIn .45s ease-out both; transition: opacity .45s; }
+.mystic-stage.fade { opacity: 0; }
+@keyframes mysticIn { from { opacity: 0; transform: scale(.85); } to { opacity: 1; transform: none; } }
+.my-bg { position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle, rgba(130,70,230,.6) 0%, rgba(40,10,85,.88) 58%, rgba(10,4,24,0) 74%); }
+.my-ring { position: absolute; inset: 6px; border-radius: 50%; animation: mysticSpin 2.2s linear infinite;
+  background: conic-gradient(from 0deg, rgba(31,227,255,0), rgba(31,227,255,.95), rgba(170,110,255,.9), rgba(31,227,255,0) 70%);
+  -webkit-mask: radial-gradient(circle, transparent 84%, #000 86%, #000 94%, transparent 96%); mask: radial-gradient(circle, transparent 84%, #000 86%, #000 94%, transparent 96%); }
+.my-ring.r2 { inset: 24px; animation-duration: 3.2s; animation-direction: reverse; opacity: .75; }
+@keyframes mysticSpin { to { transform: rotate(360deg); } }
+.my-core { position: absolute; width: 64px; height: 64px; border-radius: 50%; background: radial-gradient(circle, #fff 0%, #1fe3ff 26%, #9b5cff 60%, rgba(155,92,255,0) 72%);
+  box-shadow: 0 0 40px #b47bff, 0 0 80px rgba(31,227,255,.55); animation: mysticCore 1s ease-in-out infinite; }
+@keyframes mysticCore { 0%,100% { transform: scale(.85); opacity: .85; } 50% { transform: scale(1.15); opacity: 1; } }
+.my-spark { position: absolute; left: 50%; top: 50%; width: 6px; height: 6px; margin: -3px 0 0 -3px; border-radius: 50%; opacity: 0;
+  background: radial-gradient(circle, #fff 0%, #1fe3ff 45%, rgba(255,46,154,0) 100%); box-shadow: 0 0 8px #1fe3ff;
+  animation: mysticSpark 2.4s ease-in-out infinite; animation-delay: var(--t, 0ms); }
+@keyframes mysticSpark { 0% { opacity: 0; transform: rotate(var(--a)) translateY(calc(-1 * var(--d))) scale(.4); }
+  20% { opacity: 1; transform: rotate(var(--a)) translateY(calc(-1 * var(--d))) scale(1); }
+  60% { opacity: 1; transform: rotate(calc(var(--a) + 25deg)) translateY(-16px) scale(.8); }
+  100% { opacity: 0; transform: rotate(var(--a)) translateY(0) scale(.2); } }
+.mystic-stage.reveal .my-spark { animation-play-state: paused; opacity: 0; transition: opacity .3s; }
+.mystic-stage.reveal .my-core { animation: none; transform: scale(2.6); opacity: 0; transition: transform .6s ease-out, opacity .6s ease-out; }
+.my-item { position: absolute; display: flex; flex-direction: column; align-items: center; gap: 6px; opacity: 0; transform: scale(.2); }
+.mystic-stage.reveal .my-item { animation: myItemIn .75s cubic-bezier(.2,1.5,.4,1) .05s forwards; }
+@keyframes myItemIn { 0% { opacity: 0; transform: scale(.2) rotate(-12deg); filter: brightness(2.6); }
+  60% { opacity: 1; transform: scale(1.12) rotate(2deg); } 100% { opacity: 1; transform: scale(1); filter: none; } }
+.my-item img { width: 150px; height: 110px; object-fit: contain; filter: drop-shadow(0 0 16px var(--rc, #1fe3ff)) drop-shadow(0 6px 10px rgba(60,10,50,.6)); }
+.my-name { font-size: 11px; font-weight: 800; color: #fff; letter-spacing: .06em; white-space: nowrap; max-width: 230px; overflow: hidden; text-overflow: ellipsis; text-shadow: 0 0 10px var(--rc, #1fe3ff); }
+
+/* ---- мистический апгрейд: плашка результата и скрытый список ---- */
+.my-verdict { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); padding: 6px 16px; border-radius: 999px; white-space: nowrap;
+  font-weight: 900; font-size: 13px; letter-spacing: .2em; animation: verdictIn .6s cubic-bezier(.2,1.6,.4,1) .35s both; }
+.my-verdict.ok { color: #140511; background: linear-gradient(90deg, #d8f8ff, #1fe3ff); box-shadow: 0 0 22px rgba(31,227,255,.85); }
+.my-verdict.fail { color: #fff; background: linear-gradient(90deg, #4a1a6e, #2b1040); border: 1px solid #b47bff; box-shadow: 0 0 18px rgba(170,110,255,.6); }
+@keyframes verdictIn { from { opacity: 0; transform: translate(-50%, 10px) scale(.7); } to { opacity: 1; transform: translate(-50%, 0) scale(1); } }
+.empty.mystic-hide { line-height: 1.6; padding: 26px 12px; color: #cdb8ff; }
+
+/* результат в правой карточке: проигрыш — приглушённый предмет */
+.up-target-img.dim img { opacity: .35; filter: grayscale(.7); }

@@ -1,0 +1,434 @@
+/* style/08-shell-profile-cs.css — Шапка и оболочка, профиль, инвентарь КС.
+   Порядок подключения важен (каскад): см. index.html. */
+/* ---------- Шапка ---------- */
+.topbar-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 22px;
+}
+.top-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.profile-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.chip-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.25;
+  text-align: left;
+}
+.chip-text small {
+  color: var(--muted);
+  font-size: 11px;
+}
+.chip-text .profile-name {
+  color: var(--orange-2);
+  font-size: 13px;
+  font-weight: 700;
+}
+.chip-bal b {
+  color: var(--orange-2);
+  font-weight: 700;
+}
+.avatar {
+  overflow: hidden;
+}
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.wallet-btn {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  border: 1px solid var(--orange);
+  background: rgba(238,111,60,.08);
+  color: var(--orange-2);
+  cursor: pointer;
+}
+.wallet-btn:hover { background: rgba(238,111,60,.2); color: #fff; }
+.balance-pill { display: none; }
+
+/* ---------- Оболочка: лента слева, контент справа ---------- */
+.shell {
+  display: grid;
+  grid-template-columns: 178px minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 22px;
+}
+.shell > .wrap {
+  max-width: none;
+  margin: 0;
+  padding: 22px 0 40px;
+  min-width: 0;
+  width: auto;
+}
+.live-col {
+  position: sticky;
+  top: 74px;
+  margin-top: 22px;
+  height: calc(100vh - 96px);
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding: 12px 10px;
+  background: linear-gradient(180deg, rgba(10,8,18,.55), rgba(5,4,10,.4));
+  border: 1px solid rgba(31,227,255,.2);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: inset 0 0 40px rgba(31,227,255,.04), 0 0 24px rgba(31,227,255,.08);
+}
+.live-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.live-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow: hidden;
+}
+
+/* новые элементы живой ленты: въезжают сбоку */
+/* =========================================================
+   ЖИВАЯ ЛЕНТА: вспышка из центра (идея 5)
+   Фон карточки единый, цвет редкости виден только в кольце при появлении
+   ========================================================= */
+.live-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 6px 7px;
+  border-radius: 6px;
+  background: linear-gradient(180deg, rgba(22, 16, 40, .92), rgba(9, 7, 18, .96));
+  border-bottom: 1px solid #2a1d4a;
+  min-width: 0;
+  animation: liveIn .5s cubic-bezier(.2, .8, .2, 1) both;
+  border: 1px solid #2a1d4a;
+  overflow: hidden;
+}
+
+/* живая лента: имя и цена всегда поверх вспышки */
+
+/* живая лента: имя и цена читаются на любом фоне картинки */
+.live-tile img {
+  width: 100%;
+  height: 56px;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 10px rgba(0,0,0,.5));
+  position: relative;
+  z-index: 4;
+  flex: 0 1 auto;
+  min-height: 0;
+}
+.live-tile small {
+  max-width: 92%;
+  color: #ffffff;
+  font-size: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+  z-index: 4;
+  flex: 0 0 auto;
+  display: block;
+  width: fit-content;
+  margin: 4px auto 0;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(6, 4, 14, .85);
+  border: 1px solid rgba(31, 227, 255, .3);
+  font-family: "Orbitron", sans-serif;
+  font-weight: 700;
+  letter-spacing: .03em;
+  text-shadow: none;
+}
+.live-tile b {
+  margin-top: 4px;
+  color: #1fe3ff;
+  font-size: 12px;
+  font-weight: 900;
+  position: relative;
+  z-index: 4;
+  flex: 0 0 auto;
+  font-family: "Orbitron", sans-serif;
+  text-shadow: 0 0 8px rgba(31, 227, 255, .6);
+}
+
+/* кейс: лента вынесена, колонка одна */
+.case-layout { grid-template-columns: minmax(0, 1fr); display: grid; }
+
+/* ---------- Розыгрыш: кнопка «Продать» в каждом окне ---------- */
+.rw.won .rw-won-img { height: 84px; }
+.rw.won .rw-won-img img { max-height: 84px; }
+.rw-sell {
+  margin-top: 2px;
+  height: 26px;
+  padding: 0 12px;
+  border-radius: 4px;
+  border: 1px solid var(--orange);
+  background: transparent;
+  color: var(--orange-2);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.rw-sell:hover { background: rgba(238,111,60,.2); color: #fff; }
+.rw.won.small .rw-won-name { display: none; }
+.rw.won.small .rw-won-img { height: 64px; }
+.rw.won.small .rw-won-img img { max-height: 64px; }
+
+/* ---------- Профиль ---------- */
+.pf2-user-btns {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+.pf2-settings-btn { min-width: 200px; }
+.pf2-avatar { overflow: hidden; }
+.pf2-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+.pf2-item-status {
+  margin-top: auto;
+  width: calc(100% + 16px);
+  margin-left: -8px;
+  border-top: 1px solid #252d40;
+  padding: 8px 0;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .3px;
+  color: var(--muted);
+}
+.pf2-item-status.sold { color: #ff7a7a; }
+.pf2-item-status.upgrade { color: #c79bff; }
+.pf2-item-status.contract { color: #3ec8ff; }
+.pf2-item.gone { opacity: .8; }
+
+/* окно настроек */
+.set-modal { width: 440px; max-width: 92vw; }
+.set-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 6px 0 14px;
+}
+.set-av {
+  width: 84px;
+  height: 84px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--orange);
+  background: #222a3a;
+  color: #fff;
+  font-size: 32px;
+  font-weight: 800;
+}
+.set-av img { width: 100%; height: 100%; object-fit: cover; }
+.set-av-tools { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.set-av-tools input[type=file] { color: var(--text); font-size: 12px; max-width: 240px; }
+.set-reset { align-self: flex-start; height: 30px; font-size: 12px; }
+.set-input {
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
+  box-sizing: border-box;
+  background: #0f131c;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--text);
+  font: inherit;
+  outline: none;
+}
+.set-input:focus { border-color: var(--orange); }
+.set-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+/* ---------- Метка износа у скинов ---------- */
+.wear-tag {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 0 4px;
+  font-size: 10px;
+  line-height: 14px;
+  color: #cfd6e4;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  vertical-align: middle;
+}
+
+/* ---------- Страницы в апгрейде и профиле ---------- */
+.pager { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 12px; }
+.pg-btn {
+  min-width: 34px; height: 30px; padding: 0 10px;
+  background: transparent; color: var(--orange-2);
+  border: 1px solid var(--orange-2); border-radius: 6px;
+  font-size: 16px; cursor: pointer;
+}
+.pg-btn:disabled { opacity: .35; cursor: default; }
+.pg-info { min-width: 70px; text-align: center; font-size: 13px; color: var(--muted); }
+/* одиночный предмет в ставке апгрейда: как карточка цели */
+.up-solo { cursor: pointer; display: flex; flex-direction: column; }
+
+/* ---------- Апгрейд: инструменты, сортировка, настройки ---------- */
+button.up-tool { background: none; border: 0; padding: 0; color: inherit; cursor: pointer; }
+button.up-tool:hover { color: #fff; }
+button.up-tool.on { color: #fff; background: rgba(238, 111, 60, .25); }
+button.up-tool.off { opacity: .35; }
+.up-sort { font-size: 12px; padding: 0 10px; height: 26px; margin-right: 10px; }
+.up-set-modal { width: 540px; max-width: 94vw; }
+.us-sec { padding: 14px 0; border-bottom: 1px solid var(--line); }
+.us-sec:last-of-type { border-bottom: 0; }
+.us-title { font-size: 17px; font-weight: 800; color: #fff; }
+.us-sub { font-size: 12px; color: var(--muted); margin: 4px 0 12px; }
+.us-arrows { display: flex; gap: 12px; }
+.us-arrow {
+  width: 44px; height: 44px; display: grid; place-items: center;
+  border: 2px solid transparent; border-radius: 50%; background: #121620; cursor: pointer;
+}
+.us-arrow.on { border-color: var(--orange-2); }
+.us-arr {
+  width: 0; height: 0;
+  border-left: 9px solid transparent; border-right: 9px solid transparent;
+  border-top: 26px solid var(--ac);
+  filter: drop-shadow(0 0 6px var(--ac));
+}
+.us-row { display: flex; gap: 26px; }
+.us-grp { display: flex; flex-direction: column; gap: 8px; }
+.us-lbl { font-size: 13px; color: var(--muted); }
+.us-ins { display: flex; gap: 8px; }
+.us-in {
+  display: flex; align-items: center; gap: 4px; height: 38px; padding: 0 10px;
+  background: #121620; border: 1px solid var(--line); border-radius: 6px;
+}
+.us-in span { color: var(--muted); font-weight: 700; }
+.us-in input {
+  width: 58px; background: transparent; border: 0; outline: none;
+  color: #fff; font-weight: 700; font-size: 15px; text-align: left;
+}
+.us-reset {
+  margin-top: 14px; background: none; border: 0; color: var(--orange-2);
+  font-size: 11px; font-weight: 700; letter-spacing: .4px; text-transform: uppercase; cursor: pointer;
+}
+
+/* подробная статистика профиля */
+.stat-sec { margin-bottom: 14px; }
+.stat-sec-title { font-weight: 700; letter-spacing: .5px; margin-bottom: 12px; }
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; }
+.stat-tile { display: flex; flex-direction: column; gap: 4px; padding: 10px 12px; border: 1px solid #2f374e; border-radius: 8px; }
+.stat-tile span { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+.stat-tile b { font-size: 16px; }
+.stat-list { margin-top: 12px; }
+.stat-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #2f374e; font-size: 13px; }
+.pos { color: #4ade80; }
+.neg { color: #f87171; }
+
+/* профиль: ряд кнопок, демо-страница КС (макет главного меню, свои элементы оформления) */
+.pf-stats-toggle { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.cs-stage { position: relative; height: 78vh; min-height: 620px; border-radius: 10px; overflow: hidden; border: 1px solid #2f374e;
+  background: #3a4550 url('../../img/cs/scene.jpg') center 60% / cover no-repeat; }
+.cs-topbar { position: absolute; top: 0; left: 0; right: 0; height: 54px; display: flex; align-items: center; gap: 18px; padding: 0 16px;
+  background: rgba(10, 14, 20, .72); z-index: 4; }
+.cs-icon { background: none; border: 0; color: #cfd6df; font-size: 18px; cursor: pointer; padding: 4px 8px; }
+.cs-tabs { display: flex; gap: 26px; margin: 0 auto; }
+.cs-tab { background: none; border: 0; color: #c9d1db; font-size: 14px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; cursor: pointer; padding: 8px 0; }
+.cs-tab:hover { color: #fff; }
+.cs-tab.active { color: #fff; border-bottom: 2px solid #e8a33d; }
+.cs-right { position: absolute; right: 16px; top: 70px; width: 240px; background: rgba(14, 18, 24, .72); border-radius: 6px; padding: 12px; z-index: 3; }
+.cs-online { font-weight: 700; color: #dfe6ee; margin-bottom: 8px; font-size: 14px; }
+.cs-friend { display: flex; gap: 10px; align-items: center; padding: 8px 0; color: #dfe6ee; font-size: 14px; border-bottom: 1px solid rgba(255, 255, 255, .06); }
+.cs-friend small { display: block; color: #8b96a3; font-size: 12px; }
+.cs-friend small.on { color: #4ade80; }
+.cs-av { width: 30px; height: 30px; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; color: #fff; flex-shrink: 0; }
+
+/* КС: инвентарь, снаряжение, рейтинг */
+.cs-content { position: absolute; top: 54px; left: 0; right: 0; bottom: 0; overflow: auto; padding: 18px 20px; background: rgba(10, 14, 20, .82); z-index: 3; }
+.cs-landing-hint { position: absolute; left: 50%; bottom: 28px; transform: translateX(-50%); color: #e5ebf2; background: rgba(10, 14, 20, .72); padding: 8px 16px; border-radius: 6px; font-size: 14px; z-index: 2; }
+.cs-chip { background: none; border: 1px solid #2f374e; color: #dfe6ee; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 700; }
+.cs-chip.active { border-color: #e8a33d; color: #fff; }
+.cs-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; color: #dfe6ee; }
+.cs-toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+.cs-side-toggle { display: flex; gap: 8px; }
+.cs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.cs-card { position: relative; background: rgba(30, 36, 46, .92); border: 1px solid #2f374e; border-bottom: 3px solid var(--rc); border-radius: 6px; padding: 8px; color: #dfe6ee; }
+.cs-card[data-action] { cursor: pointer; }
+.cs-card[data-action]:hover { border-color: #e8a33d; }
+.cs-card-img img { width: 100%; height: 90px; object-fit: contain; display: block; }
+.cs-card-name { display: flex; flex-direction: column; font-size: 12px; color: #b7c0cb; margin-top: 4px; min-height: 32px; }
+.cs-card-name b { color: #fff; font-size: 13px; }
+.cs-card-price { font-weight: 800; color: #fff; font-size: 13px; margin-top: 4px; }
+.cs-eq { position: absolute; top: 6px; right: 6px; background: #e8a33d; color: #000; font-size: 10px; font-weight: 800; padding: 2px 5px; border-radius: 3px; }
+.cs-slots { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 18px; }
+.cs-slot { background: rgba(30, 36, 46, .92); border: 1px solid #2f374e; border-radius: 8px; padding: 10px; cursor: pointer; text-align: center; color: #dfe6ee; display: flex; flex-direction: column; gap: 6px; align-items: center; min-height: 190px; }
+.cs-slot.selected { border-color: #e8a33d; }
+.cs-slot img { width: 100%; height: 90px; object-fit: contain; }
+.cs-slot-label { font-size: 12px; text-transform: uppercase; letter-spacing: .6px; color: #8b96a3; }
+.cs-slot-empty { color: #55606e; font-size: 13px; height: 90px; display: flex; align-items: center; }
+.cs-slot-name { font-size: 12px; color: #dfe6ee; }
+.cs-unequip { background: none; border: 1px solid #5a3420; color: #f5b07a; padding: 3px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+.cs-note { color: #8b96a3; font-size: 13px; margin-bottom: 12px; }
+.cs-table { width: 100%; border-collapse: collapse; color: #dfe6ee; font-size: 14px; }
+.cs-table th, .cs-table td { padding: 10px 12px; border-bottom: 1px solid #2f374e; text-align: left; }
+.cs-table th { color: #8b96a3; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; }
+.cs-table tr.me td { color: #e8a33d; font-weight: 800; }
+@media (max-width: 900px) { .cs-slots { grid-template-columns: repeat(2, 1fr); } }
+
+/* КС: экран закупки — оперативники по бокам, 15 слотов посередине */
+.cs-lo { display: grid; grid-template-columns: 190px 1fr 190px; gap: 16px; align-items: start; }
+.cs-op { cursor: pointer; border: 1px solid #2f374e; border-radius: 10px; padding: 10px; background: rgba(20, 26, 34, .7); text-align: center; opacity: .5; transition: opacity .2s, border-color .2s; }
+.cs-op:hover { opacity: .85; }
+.cs-op.active { opacity: 1; border-color: #e8a33d; }
+.cs-op img { height: 320px; width: 100%; object-fit: contain; }
+.cs-op-label { font-weight: 800; color: #dfe6ee; margin-top: 6px; font-size: 13px; text-transform: uppercase; letter-spacing: .5px; }
+.cs-lo-head { font-weight: 800; color: #dfe6ee; margin-bottom: 12px; font-size: 15px; }
+.cs-group { margin-bottom: 12px; }
+.cs-group-title { font-size: 11px; color: #8b96a3; text-transform: uppercase; letter-spacing: .6px; margin-bottom: 6px; }
+.cs-group-slots { display: grid; gap: 8px; }
+.cs-group-slots .cs-slot { min-height: 150px; padding: 8px; }
+.cs-group-slots .cs-slot img { height: 70px; }
+.cs-group-slots .cs-slot-name { font-size: 11px; }
+.cs-group-slots .cs-slot-empty { height: 70px; }
+.cs-pick { margin-top: 14px; }
+
+/* раунд 7c: пистолеты / промежуточное / винтовки — три колонки сверху вниз; нож и перчатки под каждым оперативником */
+.cs-lo { grid-template-columns: 200px 1fr 200px; }
+.cs-op img { height: 300px; }
+.cs-op-wrap { display: flex; flex-direction: column; gap: 10px; }
+.cs-op-slots { display: grid; grid-template-columns: 1fr; gap: 8px; }
+.cs-op-slots .cs-slot, .cs-col .cs-slot { min-height: 0; padding: 6px; gap: 4px; }
+.cs-op-slots .cs-slot img, .cs-col .cs-slot img { height: 50px; }
+.cs-op-slots .cs-slot-empty, .cs-col .cs-slot-empty { height: 50px; }
+.cs-op-slots .cs-slot-label, .cs-col .cs-slot-label { font-size: 10px; }
+.cs-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.cs-col { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.cs-col .cs-group-title { margin-bottom: 0; }
+@media (max-width: 1000px) { .cs-lo { grid-template-columns: 1fr; } .cs-op img { height: 200px; } .cs-cols { grid-template-columns: 1fr; } }

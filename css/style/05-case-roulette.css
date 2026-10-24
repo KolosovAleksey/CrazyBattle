@@ -1,0 +1,470 @@
+/* style/05-case-roulette.css — Страница кейса, рулетки открытия, модалки и тосты.
+   Порядок подключения важен (каскад): см. index.html. */
+/* =========================================================
+   КЕЙС: ОТКРЫТИЕ
+   ========================================================= */
+.back-btn {
+  margin-bottom: 14px;
+  padding: 6px 0;
+  background: none;
+  border: 0;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+}
+.back-btn:hover { color: #fff; }
+.back-btn:disabled { opacity: .4; }
+
+.case-hero {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  padding: 18px 26px;
+  background:
+    radial-gradient(520px 260px at 18% 50%, var(--glow), transparent 70%),
+    linear-gradient(180deg, #1a202c, var(--panel));
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+.case-hero { --glow: rgba(238,111,60,.25); }
+.case-hero-img { position: relative; width: 230px; height: 200px; flex-shrink: 0; }
+.case-hero-info h1 { font-size: 34px; font-weight: 800; text-transform: uppercase; letter-spacing: .4px; }
+.case-hero-info .muted { margin-top: 4px; }
+.open-btns { display: flex; gap: 10px; margin-top: 18px; }
+
+.roulette-window {
+  position: relative;
+  height: 168px;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.35), transparent 30%, transparent 70%, rgba(0,0,0,.35)),
+    #0c0f16;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.roulette {
+  position: absolute;
+  left: 0;
+  top: 8px;
+  display: flex;
+  height: 150px;
+  will-change: transform;
+}
+.ri {
+  position: relative;
+  width: 120px;
+  height: 150px;
+  flex-shrink: 0;
+  padding: 10px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: linear-gradient(180deg, #1c2332, #141922);
+  border-right: 1px solid #0c0f16;
+  border-bottom: 3px solid var(--rc);
+}
+.ri img { width: 84px; height: 84px; object-fit: contain; filter: drop-shadow(0 6px 10px rgba(0,0,0,.5)); }
+.ri-name { font-size: 10px; color: var(--text); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
+.roulette-pointer {
+  position: absolute;
+  left: 50%;
+  z-index: 3;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+}
+.roulette-pointer.top {
+  top: 0;
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-top: 12px solid var(--orange);
+}
+.roulette-pointer.bottom {
+  bottom: 0;
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-bottom: 12px solid var(--orange);
+}
+.roulette-window::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  transform: translateX(-1px);
+  background: var(--orange);
+  box-shadow: 0 0 14px var(--orange);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* =========================================================
+   МОДАЛКА И ТОСТЫ
+   ========================================================= */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  background: rgba(5, 7, 12, .72);
+  backdrop-filter: blur(3px);
+}
+.modal {
+  width: 420px;
+  padding: 22px;
+  background: linear-gradient(180deg, #1c2332, var(--panel));
+  border: 1px solid var(--line-2);
+  border-radius: 12px;
+  box-shadow: 0 30px 60px rgba(0,0,0,.6);
+}
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  color: #fff;
+  font-size: 16px;
+}
+.modal-head .x {
+  background: none;
+  border: 0;
+  color: var(--muted);
+  font-size: 16px;
+}
+.modal-head .x:hover { color: #fff; }
+.dep-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px; }
+.dep-grid button { height: 46px; font-weight: 800; font-size: 14px; }
+
+#toast-root {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+.toast {
+  min-width: 260px;
+  padding: 11px 16px;
+  background: #1c2332;
+  border-left: 4px solid var(--orange);
+  border-radius: 8px;
+  color: #fff;
+  box-shadow: 0 12px 30px rgba(0,0,0,.5);
+  animation: toastIn .25s ease-out;
+}
+.toast.success { border-color: var(--green); }
+.toast.error   { border-color: var(--red); }
+.toast.warn    { border-color: var(--orange-2); }
+@keyframes toastIn { from { opacity: 0; transform: translateX(20px); } }
+
+/* =========================================================
+   СТРАНИЦА КЕЙСА (как в референсе «Баттлдроп»)
+   ========================================================= */
+.case-layout {
+  display: grid;
+  grid-template-columns: 178px 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+/* колонка живых дропов слева */
+.case-side {
+  padding: 12px 10px;
+  background: linear-gradient(180deg, #1a1a2a, #141823 40%);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.side-title {
+  margin: 2px 0 10px 4px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  color: var(--muted);
+}
+.side-feed { display: flex; flex-direction: column; gap: 6px; }
+.side-drop {
+  padding: 8px 6px 6px;
+  text-align: center;
+  border-radius: 8px;
+  border-bottom: 3px solid var(--rc);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--rc) 32%, #1a1826) 0%, #141823 90%);
+  animation: slideIn .35s ease-out;
+}
+.side-drop img { width: 118px; height: 74px; margin: 0 auto; object-fit: contain; filter: drop-shadow(0 6px 10px rgba(0,0,0,.5)); }
+.side-drop small {
+  display: block;
+  margin-top: 2px;
+  font-size: 11px;
+  color: #dfe6f5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.side-drop b { display: block; margin-top: 2px; font-size: 12px; color: #fff; }
+
+.case-main { min-width: 0; }
+
+.case-head { text-align: center; margin-top: 2px; }
+.case-kicker {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  color: var(--muted);
+}
+.case-head h1 {
+  margin-top: 4px;
+  font-size: 30px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: #fff;
+}
+
+/* кейс со светящимся кольцом */
+.case-stage {
+  position: relative;
+  width: 300px;
+  height: 260px;
+  margin: 6px auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.case-stage .ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 270px;
+  height: 270px;
+  margin: -135px 0 0 -135px;
+  border-radius: 50%;
+  border: 3px solid var(--glow);
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  box-shadow: 0 0 22px var(--glow), inset 0 0 18px var(--glow);
+  opacity: .9;
+  animation: spinRing 16s linear infinite;
+}
+@keyframes spinRing { to { transform: rotate(360deg); } }
+.case-stage .case-hero-img {
+  position: relative;
+  width: 230px;
+  height: 210px;
+  z-index: 1;
+}
+
+/* переключатель «Открыть 1…10 раз» */
+.count-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--text);
+}
+.count-btns { display: flex; gap: 4px; }
+.count-btn {
+  width: 30px;
+  height: 30px;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 700;
+  transition: .15s;
+}
+.count-btn:hover:not(:disabled) { color: #fff; }
+.count-btn.active {
+  border-color: var(--orange);
+  background: rgba(238, 111, 60, .12);
+  color: #fff;
+}
+.count-btn:disabled { opacity: .4; cursor: not-allowed; }
+
+/* кнопки открытия: оранжевая обводка */
+.open-row {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 14px 0 0;
+}
+.btn-outline {
+  height: 44px;
+  padding: 0 22px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(238, 111, 60, .06);
+  border: 2px solid var(--orange);
+  border-radius: 4px;
+  color: var(--orange-2);
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .3px;
+  transition: background .15s;
+}
+.btn-outline:hover:not(:disabled) { background: rgba(238, 111, 60, .2); color: #fff; }
+.btn-outline:disabled { opacity: .35; cursor: not-allowed; }
+.btn-outline .ico { font-size: 14px; }
+
+.case-main .roulette-window { margin-top: 18px; }
+
+/* «Содержимое кейса» */
+.drops-head {
+  margin: 34px 0 16px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+  color: #fff;
+}
+.drops-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+}
+.drop-tile {
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 10px;
+  background: linear-gradient(180deg, #1c1f36, #141829);
+  border-radius: 6px;
+  border-bottom: 3px solid var(--rc);
+  text-align: center;
+}
+.drop-tile::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 45%, var(--rc), transparent 70%);
+  opacity: .14;
+  pointer-events: none;
+}
+.drop-price {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 2;
+  padding: 3px 7px;
+  background: rgba(10, 12, 20, .85);
+  border-radius: 4px;
+  color: var(--orange-2);
+  font-size: 12px;
+  font-weight: 700;
+}
+.drop-img {
+  position: relative;
+  z-index: 1;
+  height: 116px;
+  display: grid;
+  place-items: center;
+}
+.drop-img img {
+  max-width: 92%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, .55));
+}
+.drop-name {
+  position: relative;
+  z-index: 1;
+  padding: 0 10px;
+  line-height: 1.3;
+}
+.drop-name b {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.drop-name span {
+  display: block;
+  font-size: 11px;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ============================================================
+   v5: рулетка-сетка (открытие кейсов) + новый апгрейд
+   ============================================================ */
+
+/* ---------- Рулетки открытия ---------- */
+.roulette-grid {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+.roulette-grid:empty { display: none; }
+
+.rw {
+  position: relative;
+  height: 168px;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: 12px;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.45), transparent 32%, transparent 68%, rgba(0,0,0,.45)),
+    #0b0e15;
+  border: 1px solid #1d2435;
+}
+.rw .roulette {
+  top: 9px;
+  height: 150px;
+}
+.rw .ri {
+  border-right: 1px solid #0b0e15;
+}
+.rw .roulette-pointer { display: none; }
+
+/* cyan-кольцо вокруг окна рулетки */
+.rw-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  border: 2px solid #3ec8ff;
+  box-shadow:
+    0 0 0 1px rgba(62,200,255,.25),
+    0 0 18px rgba(62,200,255,.55),
+    inset 0 0 18px rgba(62,200,255,.35);
+  pointer-events: none;
+  z-index: 4;
+}
+/* центральная линия-указатель */
+.rw-line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  margin-left: -1px;
+  background: #3ec8ff;
+  box-shadow: 0 0 12px #3ec8ff;
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* сетка из нескольких рулеток — компактнее */
+.rw.small { height: 132px; }
+.rw.small .roulette { top: 6px; height: 120px; }
+.rw.small .ri { width: 96px; height: 120px; padding: 8px 4px; gap: 4px; }
+.rw.small .ri img { width: 62px; height: 62px; }
+.rw.small .ri-name { font-size: 9px; }

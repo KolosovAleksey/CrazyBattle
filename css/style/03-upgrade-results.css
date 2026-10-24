@@ -1,0 +1,164 @@
+/* style/03-upgrade-results.css — Апгрейд: макет, результаты розыгрышей.
+   Порядок подключения важен (каскад): см. index.html. */
+/* =========================================================
+   АПГРЕЙД
+   ========================================================= */
+.up-layout {
+  display: grid;
+  grid-template-columns: 1fr 440px;
+  gap: 18px;
+  align-items: start;
+}
+.up-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); max-height: 720px; overflow-y: auto; padding-right: 4px; }
+
+.up-slots,
+.ct-slots {
+  display: grid;
+  gap: 8px;
+}
+.up-slots { grid-template-columns: repeat(6, 1fr); }
+
+.slot {
+  position: relative;
+  height: 96px;
+  display: grid;
+  place-items: center;
+  background: #0f131b;
+  border: 1px dashed var(--line-2);
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 24px;
+  overflow: hidden;
+}
+.slot.filled {
+  border: 1px solid var(--rc);
+  border-bottom: 3px solid var(--rc);
+  background: linear-gradient(180deg, #1c2332, #141922);
+  cursor: pointer;
+}
+.slot.filled img { width: 60px; height: 60px; object-fit: contain; grid-row: 1; }
+.slot-price {
+  position: absolute;
+  bottom: 4px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  font-size: 11px;
+}
+.slot-price .coin { margin-right: 3px; width: 12px; height: 12px; font-size: 8px; }
+.slot-name {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  right: 4px;
+  font-size: 9px;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mults {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-top: 10px;
+}
+.mult-btn {
+  height: 36px;
+  background: #0f131b;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  color: var(--text);
+  font-weight: 700;
+  font-size: 13px;
+  transition: .15s;
+}
+.mult-btn:hover:not(:disabled) { border-color: var(--line-2); color: #fff; }
+.mult-btn.active {
+  border-color: var(--orange);
+  background: linear-gradient(180deg, rgba(255,151,57,.22), rgba(238,111,60,.1));
+  color: #fff;
+  box-shadow: 0 0 14px -4px rgba(238, 111, 60, .8);
+}
+.mult-btn.rand { grid-column: 1 / -1; }
+.mult-btn:disabled { opacity: .4; }
+
+.wheel-area { display: flex; justify-content: center; margin: 18px 0 4px; }
+.wheel-box {
+  position: relative;
+  width: 280px;
+  height: 280px;
+}
+.wheel {
+  width: 280px;
+  height: 280px;
+  display: block;
+  transform-origin: 50% 50%;
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, .5));
+}
+.wheel-box.spinning .wheel { filter: drop-shadow(0 0 22px rgba(255,46,154,.55)); }
+
+.wheel-center {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  z-index: 2;
+}
+.wheel-center > div {
+  width: 118px;
+  height: 118px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 40%, #1d2433, #111620);
+  border: 2px solid #2d3750;
+  box-shadow: inset 0 0 18px rgba(0,0,0,.6);
+}
+.wheel-center small { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .14em; font-family: "Orbitron", sans-serif; }
+.wheel-center strong { color: #fff; font-size: 24px; font-weight: 800; margin-top: 2px; }
+
+.up-target {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+  padding: 10px;
+  min-height: 74px;
+  background: #0f131b;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.up-target-img { width: 56px; height: 56px; flex-shrink: 0; }
+.up-target-img img { width: 100%; height: 100%; object-fit: contain; }
+.up-target-info { min-width: 0; }
+.up-target-info small { display: block; color: var(--muted); font-size: 11px; text-transform: uppercase; }
+.up-target-info b { display: block; color: #fff; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.up-target-info span { font-weight: 700; font-size: 13px; }
+.up-target-empty { color: var(--muted); font-size: 13px; margin: auto; }
+
+/* =========================================================
+   РЕЗУЛЬТАТЫ (апгрейд, контракт, кейс)
+   ========================================================= */
+.res-kicker {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--rc, var(--muted));
+  font-weight: 700;
+}
+.res-img { width: 120px; height: 100px; margin: 8px auto; }
+.res-img img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 8px 16px rgba(0,0,0,.6)); }
+.res-img.dim img { filter: grayscale(.7) brightness(.7) drop-shadow(0 8px 16px rgba(0,0,0,.6)); }
+.res-name { color: #fff; font-weight: 800; font-size: 16px; }
+.res-price { margin-top: 4px; color: #fff; font-weight: 700; font-size: 15px; }
+.res-sub { margin-top: 4px; color: var(--muted); font-size: 12px; }
+
+@keyframes popIn { from { opacity: 0; transform: scale(.97); } }

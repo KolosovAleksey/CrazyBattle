@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1200">
+  <title>CrazyBattle — открывай кейсы и выигрывай скины</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style/01-layout.css?v=43">
+  <link rel="stylesheet" href="css/style/02-cards-controls.css?v=43">
+  <link rel="stylesheet" href="css/style/03-upgrade-results.css?v=43">
+  <link rel="stylesheet" href="css/style/04-contracts-profile.css?v=43">
+  <link rel="stylesheet" href="css/style/05-case-roulette.css?v=43">
+  <link rel="stylesheet" href="css/style/06-upgrade-wheel.css?v=43">
+  <link rel="stylesheet" href="css/style/07-profile-contracts.css?v=43">
+  <link rel="stylesheet" href="css/style/08-shell-profile-cs.css?v=43">
+  <link rel="stylesheet" href="css/style/09-battle-gold.css?v=43">
+  <link rel="stylesheet" href="css/neon/01-theme.css?v=26">
+  <link rel="stylesheet" href="css/neon/02-motion.css?v=26">
+  <link rel="stylesheet" href="css/neon/03-live-feed.css?v=26">
+  <link rel="stylesheet" href="css/neon/04-operation.css?v=26">
+  <link rel="stylesheet" href="css/neon/05-background.css?v=26">
+  <link rel="stylesheet" href="css/neon/06-battle.css?v=26">
+  <link rel="stylesheet" href="css/neon/07-achievements.css?v=26">
+  <link rel="stylesheet" href="css/neon/08-auth.css?v=1">
+</head>
+<body class="neon">
+  <!-- живой фон: слои под интерфейсом (только неон-тема; декор, без взаимодействия) -->
+  <div class="fx-layers" aria-hidden="true">
+    <div class="fx-aurora"><i></i><i></i><i></i></div>
+    <div class="fx-sun"></div>
+    <div class="fx-pillar fx-pillar-l"></div>
+    <div class="fx-pillar fx-pillar-r"></div>
+    <div class="fx-floor"><div class="fx-floor-grid"></div></div>
+    <div class="fx-horizon"></div>
+    <div class="fx-streaks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="fx-beam fx-beam-a"></div>
+    <div class="fx-beam fx-beam-b"></div>
+    <div class="fx-ring"></div>
+    <div class="fx-scan"></div>
+    <div class="fx-spot"></div>
+    <div class="fx-vignette"></div>
+    <div class="fx-crt"></div>
+    <span class="fx-corner tl"></span><span class="fx-corner tr"></span>
+    <span class="fx-corner bl"></span><span class="fx-corner br"></span>
+  </div>
+  <canvas id="fx-bg" aria-hidden="true"></canvas>
+
+  <!-- ===== ШАПКА ===== -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <button class="logo" data-route="home" id="logo-btn" aria-label="На главную">
+        <img class="logo-img" src="img/misc/logo.png" alt="CrazyBattle">
+      </button>
+
+      <nav class="nav">
+        <button class="nav-tab" data-route="upgrade">Апгрейд</button>
+        <button class="nav-tab" data-route="contracts">Контракты</button>
+        <button class="nav-tab" data-route="battle">Battle</button>
+        <button class="nav-tab nav-op" data-route="operation">Операция<span class="nav-new">NEW</span></button>
+      </nav>
+
+      <div class="top-right">
+        <button class="profile-chip" data-route="profile" id="profile-btn">
+          <span class="avatar" id="avatar-letter">И</span>
+          <span class="chip-text">
+            <small>Привет,</small>
+            <b class="profile-name" id="profile-name">Игрок</b>
+            <small>На счёте: <span class="chip-bal"><b id="balance">1 000</b> ₽</span></small>
+          </span>
+        </button>
+        <button class="wallet-btn" data-action="open-deposit" id="deposit-btn" title="Пополнить баланс">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18M16 15h2"/><path d="M7 6V5a2 2 0 0 1 2-2h8"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="shell">
+    <aside class="live-col">
+      <div class="live-title">Live drop</div>
+      <div id="live-feed" class="live-feed"></div>
+    </aside>
+    <main class="wrap">
+
+    <!-- ===== ГЛАВНАЯ: КЕЙСЫ ===== -->
+    <section id="view-home" class="view">
+
+      <!-- баннер сезонной операции: ведёт на вкладку «Операция» -->
+      <div class="promo-slot">
+        <div class="op-banner" data-route="operation" role="link" tabindex="0">
+          <div class="op-banner-txt">
+            <small>СЕЗОННАЯ ОПЕРАЦИЯ · 100 УРОВНЕЙ</small>
+            <h3>Гарантировано за прохождение</h3>
+            <ul>
+              <li><b>30 ур.</b> бесплатное открытие «Тайное оружие»</li>
+              <li><b>50 ур.</b> бесплатный ножевой кейс «Наваха»</li>
+              <li><b>100 ур.</b> бесплатное открытие «Биткоин»</li>
+            </ul>
+            <span class="op-banner-btn">Открыть операцию →</span>
+          </div>
+          <div class="op-banner-imgs" aria-hidden="true">
+            <img src="img/cases/bitcoin_front.webp" alt="" onerror="this.remove()">
+            <img src="img/cases/covert_front.webp" alt="" onerror="this.remove()">
+            <img src="img/cases/navaja_front.webp" alt="" onerror="this.remove()">
+          </div>
+        </div>
+      </div>
+
+      
+
+      <div class="section-head">
+        <h2>Кейсы</h2>
+        <div class="tools">
+          <div class="search">
+            <span class="search-icon">⌕</span>
+            <input id="case-search" type="text" placeholder="Быстрый фильтр" autocomplete="off">
+          </div>
+          <select id="case-cat">
+            <option value="">Все категории</option>
+            <option value="Серийные кейсы">Серийные кейсы</option>
+            <option value="Эпические кейсы">Эпические кейсы</option>
+            <option value="Фирменные кейсы">Фирменные кейсы</option>
+            <option value="Цветные кейсы">Цветные кейсы</option>
+            <option value="Кейсы по званию">Кейсы по званию</option>
+            <option value="Оружейные кейсы">Оружейные кейсы</option>
+            <option value="Ножевые кейсы">Ножевые кейсы</option>
+            <option value="Имедж-кейсы">Имедж-кейсы</option>
+            <option value="Ограниченная серия">Ограниченная серия</option>
+            <option value="Valve CS2 и Операции">Valve CS2 и Операции</option>
+          </select>
+          <select id="case-sort">
+            <option value="default">По умолчанию</option>
+            <option value="price-desc">Сначала дорогие</option>
+            <option value="price-asc">Сначала дешёвые</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="cases-grid"></div>
+    </section>
+
+    <!-- ===== АПГРЕЙД ===== -->
+    <section id="view-upgrade" class="view">
+      <div class="up-title">Модернизация оружия 2.0</div>
+      <div class="up-tools">
+        <button class="up-tool" data-action="up-settings" title="Настройки"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
+        <button class="up-tool" id="up-sound-btn" data-action="up-sound" title="Звук"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg></button>
+        <button class="up-tool" id="up-fast-btn" data-action="up-fast" title="Быстрый режим"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></button>
+      </div>
+
+      <div class="up-top">
+        <div class="up-side">
+          <div class="up-card">
+            <div class="up-card-head" id="up-bank-head">Выберите предметы из инвентаря</div>
+            <div id="up-bank-slots"></div>
+          </div>
+          <div class="up-total"><span>Общая сумма:</span><b id="up-bank">0 ₽</b></div>
+          <div class="bal-row">
+            <div class="bal-txt">Добавить<br>баланс:</div>
+            <input type="range" id="up-balance-slider" class="range" min="0" max="0" value="0" step="1">
+            <span class="val" id="up-balance-val">0 ₽</span>
+            <span class="max" id="up-balance-max"></span>
+          </div>
+        </div>
+
+        <div class="up-center">
+          <div id="chain-hud" class="chain-hud"></div>
+          <div id="wheel-box" class="wheel-box">
+            <svg id="wheel" class="wheel" viewBox="-100 -100 200 200"></svg>
+            <div id="arrow" class="arrow"><div class="arrow-tip"></div></div>
+            <div class="wheel-center">
+              <div>
+                <strong id="up-chance">—</strong>
+                <small id="up-chance-label"></small>
+              </div>
+            </div>
+          </div>
+          <button id="up-spin" class="btn btn-big up-spin" data-action="up-spin" disabled>ПРОКАЧАТЬ</button>
+          <div id="up-hint" class="hint"></div>
+        </div>
+
+        <div class="up-side">
+          <div class="up-card">
+            <div class="up-card-head">Оружие, которое хотите получить</div>
+            <div class="up-card-img" id="up-target-img"></div>
+            <div class="up-card-foot" id="up-target-foot">
+              <div><b id="up-target-name">—</b><small id="up-target-sub"></small></div>
+              <span class="price" id="up-target-price"></span>
+            </div>
+          </div>
+          <div id="up-mults" class="mults">
+            <button class="mult-btn" data-action="up-mult" data-kind="price" data-value="2">x2</button>
+            <button class="mult-btn" data-action="up-mult" data-kind="price" data-value="5">x5</button>
+            <button class="mult-btn" data-action="up-mult" data-kind="price" data-value="10">x10</button>
+            <button class="mult-btn" data-action="up-mult" data-kind="chance" data-value="2">2%</button>
+            <button class="mult-btn" data-action="up-mult" data-kind="chance" data-value="5">5%</button>
+            <button class="mult-btn" data-action="up-mult" data-kind="chance" data-value="30">30%</button>
+            <button class="mult-btn mystic" data-action="up-mult" data-kind="mystic" data-value="3" title="Гарантированный успех: предмет от ставки ÷3 до ставки ×3">✦ Мистический апгрейд · 100%</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="up-bottom">
+        <div class="panel">
+          <div class="panel-head">
+            <span>Мои предметы <span class="muted" id="up-inv-count"></span></span>
+            <button class="btn-ghost up-sort" id="up-inv-sort" data-action="up-inv-sort"></button>
+            <span class="muted" id="up-count"></span>
+          </div>
+          <div id="up-inv-grid" class="up-grid5"></div>
+          <div id="up-inv-pager"></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><span>Выберите предмет</span></div>
+          <div class="filter-bar">
+            <select id="up-f-sort">
+              <option value="price-desc">Цена ↓</option>
+              <option value="price-asc">Цена ↑</option>
+              <option value="name">Название</option>
+            </select>
+            <span class="muted">от</span>
+            <input type="number" id="up-f-min" min="0" placeholder="0">
+            <span class="muted">до</span>
+            <input type="number" id="up-f-max" min="0" placeholder="∞">
+            <input type="text" id="up-f-q" placeholder="Поиск">
+          </div>
+          <div id="up-target-grid" class="up-grid5"></div>
+          <div id="up-target-pager"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== КОНТРАКТЫ ===== -->
+    <section id="view-contracts" class="view">
+      <div class="up-title">Контракты</div>
+
+      <div id="ct-slots" class="cx-slots"></div>
+
+      <div class="cx-bar">
+        <div class="cx-balance">
+          <span>Ваш баланс:</span>
+          <b id="ct-balance-view">0 ₽</b>
+          <button class="cx-plus" data-action="open-deposit" title="Пополнить">+</button>
+        </div>
+        <div id="ct-hint" class="cx-hint"></div>
+        <div class="cx-sum">Сумма контракта: <b id="ct-sum">0 ₽</b></div>
+      </div>
+
+      <div class="cx-cols">
+        <div class="panel">
+          <div class="panel-head">
+            <span>Мои предметы <span class="muted" id="ct-inv-count"></span></span>
+            <button id="ct-sort" class="cx-sort" data-action="ct-sort">Сначала дешёвые ↑</button>
+          </div>
+          <div id="ct-inv-grid" class="cx-grid"></div>
+          <div class="cx-pager">
+            <button class="cx-pg" data-action="ct-page" data-value="-1">‹</button>
+            <span id="ct-page-num">1</span>
+            <button class="cx-pg" data-action="ct-page" data-value="1">›</button>
+          </div>
+          <div id="ct-pages" class="cx-pages"></div>
+        </div>
+
+        <div class="panel cx-side">
+          <div class="cx-use">
+            <span class="bal-txt">Использовать<br>баланс:</span>
+            <input type="range" id="ct-balance-slider" class="range" min="0" max="0" value="0" step="1">
+            <span class="val" id="ct-balance-val">0 ₽</span>
+          </div>
+          <div class="cx-get">Вы получите предмет</div>
+          <div class="cx-range">от <b id="ct-range-min">0 ₽</b> до <b id="ct-range-max">0 ₽</b></div>
+          <div class="cx-stage">
+            <div class="cx-rainbow"></div>
+            <div id="ct-result" class="cx-box"></div>
+          </div>
+          <label class="cx-rar">Редкость результата
+            <select id="ct-rarity">
+              <option value="any">Любая</option>
+              <option value="common">Ширпотреб</option>
+              <option value="uncommon">Промышленное</option>
+              <option value="rare">Армейское</option>
+              <option value="epic">Запрещённое</option>
+              <option value="legendary">Засекреченное</option>
+              <option value="knife">★ Экстра</option>
+            </select>
+          </label>
+          <button id="ct-sign" class="cx-sign" data-action="ct-sign" disabled>Подписать!</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== ПРОФИЛЬ ===== -->
+    <section id="view-profile" class="view">
+      <div class="up-title">Профиль</div>
+
+
+      <div class="pf2-top">
+        <div class="pf2-card pf2-stats clickable" data-action="open-stats" title="Открыть полную статистику">
+          <div class="pf2-head">
+            <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+            <div><b>Статистика</b><small>Аккаунта</small></div>
+          </div>
+          <div class="pf2-nums">
+            <span class="pf2-num" title="Открыто кейсов"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg><b id="pf-opened">0</b></span>
+            <span class="pf2-num" title="Апгрейды"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l7-7 7 7M5 19l7-7 7 7"/></svg><b id="pf-upgrades">0</b></span>
+            <span class="pf2-num" title="Контракты"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M14 3H6v18h12V7z"/><path d="M14 3v4h4M9 13h6M9 17h6"/></svg><b id="pf-contracts">0</b></span>
+          </div>
+          <div class="pf2-lbl">Выведено в КС</div>
+          <div class="pf2-sold"><b id="pf-withdrawn">0 ₽</b><span id="pf-withdrawn-count"></span></div>
+        </div>
+
+        <div class="pf2-card pf-ach clickable" id="pf-ach" data-action="open-ach" title="Все достижения">
+          <div class="pf-ach-head">
+            <div class="pf-ach-title">
+              <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M8 4h8v5a4 4 0 0 1-8 0V4z"/><path d="M8 6H4v2a3 3 0 0 0 3 3M16 6h4v2a3 3 0 0 1-3 3M12 13v4M8 21h8M10 17h4"/></svg>
+              <div><b>Достижения</b><small>Коллекция</small></div>
+            </div>
+            <div class="pf-ach-count"><b id="ach-got">0</b><span>/</span><b id="ach-total">0</b><em id="ach-pct">0%</em></div>
+          </div>
+          <div class="pf-ach-bar"><i id="ach-bar"></i></div>
+          <div class="pf-ach-grid" id="ach-grid"></div>
+        </div>
+
+        <div class="pf2-card pf2-user">
+          <div class="pf2-avatar" id="pf-avatar">И</div>
+          <div class="pf2-name" id="pf-name-view">Игрок</div>
+          <div class="pf2-points" id="pf-points"></div>
+          <div class="pf2-bal">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18M16 15h2"/></svg>
+            <b id="pf-balance">0 ₽</b>
+          </div>
+          <div class="pf2-user-btns">
+            <button class="btn-outline pf2-topup" data-action="open-deposit">+ Пополнить</button>
+            <button class="btn-ghost pf2-settings-btn" data-action="pf-settings">Настроить</button>
+          </div>
+        </div>
+
+        <div class="pf2-card pf2-best">
+          <div class="pf2-title">Лучший дроп</div>
+          <div id="pf-best" class="pf2-best-body"></div>
+        </div>
+
+      </div>
+
+      <div class="pf-stats-toggle">
+        <button class="btn-outline" data-route="cs">Зайти в КС</button>
+      </div>
+
+      <div class="up-title pf2-items-title">Мои предметы</div>
+      <div class="panel">
+        <div class="pf2-filters">
+          <button class="pf2-filter" data-action="inv-filter" data-value="all"><i></i>Весь дроп (<span id="pf-all-count">0</span>)</button>
+          <button class="pf2-filter" data-action="inv-filter" data-value="new"><i></i>Новые (<span id="pf-new-count">0</span>)</button>
+          <button class="pf2-filter" data-action="inv-sort" data-value="cheap"><i></i>Дешевле</button>
+          <button class="pf2-filter" data-action="inv-sort" data-value="expensive"><i></i>Дороже</button>
+          <button class="btn-outline pf2-sell" id="pf-sell-all" data-action="sell-all">Продать</button>
+        </div>
+        <div id="pf-inv" class="pf2-grid"></div>
+        <div id="pf-pager"></div>
+      </div>
+    </section>
+
+    <!-- ===== КС ===== -->
+    <section id="view-cs" class="view">
+      <div class="cs-stage">
+        <div class="cs-topbar">
+          <button class="cs-icon" data-action="cs-home" title="Главная КС">&#8962;</button>
+          <nav class="cs-tabs">
+            <button class="cs-tab" data-action="cs-tab" data-value="inventory">Инвентарь</button>
+            <button class="cs-tab" data-action="cs-tab" data-value="loadout">Снаряжение</button>
+            <button class="cs-tab" data-action="cs-tab" data-value="rating">Рейтинг</button>
+          </nav>
+        </div>
+        <div id="cs-content" class="cs-content hidden"></div>
+      </div>
+
+      <button class="btn-ghost" data-route="profile" style="margin-top:16px">← Назад в профиль</button>
+    </section>
+
+    <!-- ===== BATTLE (Skin Battle и Case Battle) ===== -->
+    <section id="view-battle" class="view">
+      <div class="up-title">Battle</div>
+      <div id="battle-root"></div>
+    </section>
+
+    <!-- ===== КЕЙС: ОТКРЫТИЕ ===== -->
+    <!-- ===== ОПЕРАЦИЯ: сезонный пропуск ===== -->
+    <section id="view-operation" class="view">
+      <div id="op-root" class="op-page"></div>
+    </section>
+
+    <section id="view-case" class="view">
+      <div class="case-layout">
+
+
+
+        <div class="case-main">
+          <button class="back-btn" data-action="case-back">← Все кейсы</button>
+
+          <div class="case-head">
+            <div class="case-kicker">Серийные кейсы</div>
+            <h1 id="case-title">«КЕЙС»</h1>
+          </div>
+
+          <div class="case-stage">
+            <div class="ring"></div>
+            <div class="case-hero-img" id="case-hero-img"></div>
+          </div>
+
+          <div class="count-row">
+            <span>Открыть</span>
+            <div class="count-btns" id="count-btns">
+              <button class="count-btn" data-action="case-count" data-value="1">1</button>
+              <button class="count-btn" data-action="case-count" data-value="2">2</button>
+              <button class="count-btn" data-action="case-count" data-value="3">3</button>
+              <button class="count-btn" data-action="case-count" data-value="4">4</button>
+              <button class="count-btn" data-action="case-count" data-value="5">5</button>
+              <button class="count-btn" data-action="case-count" data-value="6">6</button>
+              <button class="count-btn" data-action="case-count" data-value="7">7</button>
+              <button class="count-btn" data-action="case-count" data-value="8">8</button>
+              <button class="count-btn" data-action="case-count" data-value="9">9</button>
+              <button class="count-btn" data-action="case-count" data-value="10">10</button>
+            </div>
+            <span>раз</span>
+          </div>
+
+          <div class="open-row">
+            <button id="btn-open" class="btn-outline" data-action="open-1">
+              <span class="ico">▣</span> Открыть за <span id="open-price">0 ₽</span>
+            </button>
+            <button id="btn-fast" class="btn-outline" data-action="open-fast">
+              <span class="ico">⚡</span> Быстро за <span id="fast-price">0 ₽</span>
+            </button>
+          </div>
+
+          <div id="roulette-grid" class="roulette-grid"></div>
+
+          <div id="case-actions" class="case-actions hidden">
+            <button id="btn-sell-pending" class="btn-outline" data-action="sell-pending">Продать всё</button>
+            <button class="btn-outline" data-action="again">Ещё раз</button>
+          </div>
+
+          <div class="drops-head">Содержимое кейса</div>
+          <div id="case-drops-grid" class="drops-grid"></div>
+        </div>
+      </div>
+    </section>
+
+    </main>
+  </div>
+
+  <div id="modal-root"></div>
+  <div id="toast-root"></div>
+
+  <div id="auth-gate" class="auth-gate" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+    <form id="auth-form" class="auth-card" autocomplete="on" novalidate>
+      <img class="auth-logo" src="img/misc/logo.png" alt="CrazyBattle">
+      <h2 id="auth-title" class="hidden">Вход</h2>
+      <div class="auth-tabs">
+        <button type="button" class="auth-tab active" data-mode="login">Вход</button>
+        <button type="button" class="auth-tab" data-mode="register">Регистрация</button>
+      </div>
+      <label class="auth-field">Ник
+        <input name="nick" type="text" maxlength="16" required autocomplete="username">
+      </label>
+      <label class="auth-field">Пароль
+        <input name="password" type="password" maxlength="72" required autocomplete="current-password">
+      </label>
+      <div id="auth-hint" class="auth-hint hidden">Ник от 3 до 16 символов: буквы, цифры, «_» и «-». Пароль от 6 символов.</div>
+      <div id="auth-error" class="auth-error" aria-live="polite"></div>
+      <button id="auth-submit" class="btn auth-submit" type="submit">Войти</button>
+    </form>
+  </div>
+
+  <script src="js/cases_cb.js?v=18"></script>
+  <script src="js/data.js?v=30"></script>
+  <script src="js/skins.js?v=17"></script>
+  <script src="js/storage.js?v=15"></script>
+  <script src="js/shop_items.js?v=4"></script>
+  <script src="js/shop_cases.js?v=4"></script>
+  <script src="js/fx.js?v=2"></script>
+  <script src="js/achievements.js?v=5"></script>
+  <script src="js/sfx.js?v=3"></script>
+  <!-- интерфейс: UI создаёт ui/core.js, остальные разделы добавляют методы через Object.assign -->
+  <script src="js/ui/core.js?v=42"></script>
+  <script src="js/ui/feed.js?v=42"></script>
+  <script src="js/ui/cases.js?v=42"></script>
+  <script src="js/ui/upgrade.js?v=42"></script>
+  <script src="js/ui/upgrade_settings.js?v=42"></script>
+  <script src="js/ui/upgrade_anim.js?v=42"></script>
+  <script src="js/ui/contracts.js?v=42"></script>
+  <script src="js/ui/profile.js?v=42"></script>
+  <script src="js/ui/battle.js?v=42"></script>
+  <script src="js/ui/cs.js?v=42"></script>
+  <script src="js/ui/modals.js?v=42"></script>
+  <script src="js/operation.js?v=3"></script>
+  <!-- логика: Game создаёт game/core.js, остальные разделы добавляют методы через Object.assign -->
+  <script src="js/game/cs_data.js?v=42"></script>
+  <script src="js/game/core.js?v=42"></script>
+  <script src="js/game/cases.js?v=42"></script>
+  <script src="js/game/upgrade.js?v=42"></script>
+  <script src="js/game/contracts.js?v=42"></script>
+  <script src="js/game/profile.js?v=42"></script>
+  <script src="js/game/battle.js?v=42"></script>
+  <script src="js/game/cs.js?v=42"></script>
+  <script src="js/game/feed.js?v=42"></script>
+  <script src="js/auth.js?v=1"></script>
+  <script src="js/game/boot.js?v=42"></script>
+</body>
+</html>

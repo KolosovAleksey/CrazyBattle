@@ -1,0 +1,88 @@
+/* neon/03-live-feed.css — Живая лента: вспышка из центра.
+   Порядок подключения важен (каскад): см. index.html. */
+body.neon .live-tile.burst {
+  animation: tileIn .55s cubic-bezier(.2, .9, .25, 1.15) both, tileFlash 1.6s ease-out both;
+}
+@keyframes tileIn {
+  from { opacity: 0; transform: scale(.85); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes tileFlash {
+  0%   { box-shadow: 0 0 0 0 transparent; border-color: var(--rc); }
+  25%  { box-shadow: 0 0 30px var(--rc), inset 0 0 18px var(--rc); border-color: var(--rc); }
+  100% { box-shadow: 0 0 0 0 transparent; border-color: #2a1d4a; }
+}
+
+/* ядро-вспышка */
+body.neon .lt-core {
+  position: absolute;
+  left: 50%;
+  top: 45px;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 3;
+}
+body.neon .lt-ring {
+  position: absolute;
+  left: 50%;
+  top: 45px;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 3;
+}
+body.neon .lt-spark {
+  position: absolute;
+  left: 50%;
+  top: 45px;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 3;
+}
+body.neon .lt-core {
+  width: 14px;
+  height: 14px;
+  margin: -7px 0 0 -7px;
+  border-radius: 50%;
+  background: var(--rc);
+  box-shadow: 0 0 24px var(--rc), 0 0 60px var(--rc);
+}
+body.neon .live-tile.burst .lt-core { animation: ltCore .9s ease-out both; }
+@keyframes ltCore {
+  0%   { opacity: 1; transform: scale(1.8); }
+  100% { opacity: 0; transform: scale(.3); }
+}
+
+/* кольца, расходящиеся от центра */
+body.neon .lt-ring {
+  width: 64px;
+  height: 64px;
+  margin: -32px 0 0 -32px;
+  border-radius: 50%;
+  border: 2px solid var(--rc);
+  box-shadow: 0 0 14px var(--rc), inset 0 0 10px var(--rc);
+}
+body.neon .lt-ring.r2 { border-width: 1px; }
+body.neon .live-tile.burst .lt-ring { animation: ltRing 1.3s cubic-bezier(.15, .7, .3, 1) .12s both; }
+body.neon .live-tile.burst .lt-ring.r2 { animation-delay: .32s; }
+@keyframes ltRing {
+  0%   { opacity: 1; transform: scale(.2); }
+  100% { opacity: 0; transform: scale(3.2); }
+}
+
+/* искры, разлетающиеся по кругу */
+body.neon .lt-spark {
+  width: 4px;
+  height: 4px;
+  margin: -2px 0 0 -2px;
+  border-radius: 50%;
+  background: var(--rc);
+  box-shadow: 0 0 8px var(--rc);
+}
+body.neon .live-tile.burst .lt-spark { animation: ltSpark 1s ease-out .15s both; }
+@keyframes ltSpark {
+  0%   { opacity: 1; transform: rotate(var(--a)) translateX(10px); }
+  100% { opacity: 0; transform: rotate(var(--a)) translateX(60px); }
+}
+
+/* пустое место на главной (бывший промокод): высота сохранена под будущий блок */
+.promo-slot { height: 168px; }
